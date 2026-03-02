@@ -1,127 +1,1135 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Happy 1 Year Anniversary 💗</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>For Elly 💌 — Skill System</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root{
+      --bg: #0c0a0f;
+      --panel: rgba(255, 250, 252, 0.92);
+      --panel-2: rgba(255, 250, 252, 0.80);
+      --ink: #2a1020;
+      --muted: rgba(42, 16, 32, 0.62);
 
-    body {
-      height: 100vh;
-      font-family: 'Segoe UI', sans-serif;
-      background: url('https://i.pinimg.com/originals/38/35/44/3835441859d6c6f0ca6c58410820e671.jpg') center/cover fixed;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      --pink-1:#ff4da6;
+      --pink-2:#ff7cc6;
+      --pink-3:#ffd0e7;
+      --rose:#c94e68;
+
+      --shadow: 0 18px 55px rgba(0,0,0,.35);
+      --soft: 0 10px 25px rgba(0,0,0,.18);
+      --radius: 18px;
+      --radius2: 14px;
+      --border: 1px solid rgba(201, 78, 104, 0.18);
     }
 
-    .screen {
-      display: none;
-      width: 100%;
-      height: 100%;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:#fff;
+      background:
+        radial-gradient(1200px 600px at 15% 5%, rgba(255,77,166,.28), transparent 55%),
+        radial-gradient(1000px 600px at 85% 15%, rgba(255,124,198,.22), transparent 60%),
+        url('https://amsterdamian.com/wp-content/uploads/2021/03/tulips-7jpg_s.jpg') no-repeat center center fixed;
+      background-size: cover;
+      overflow-x:hidden;
     }
 
-    .active { display: flex; animation: fadeIn 0.8s ease; }
+    /* ---------- Screens ---------- */
+    .screen{
+      min-height:100vh;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+    }
+    .screen.active{display:flex; animation: fadeIn .55s ease-out}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-    .intro h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      color: #ffeef2;
-      text-shadow: 0 0 12px rgba(255,255,255,0.7);
+    /* ---------- Shell ---------- */
+    .shell{
+      width:min(1150px, 100%);
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:18px;
     }
 
-    .intro button {
-      padding: 12px 28px;
-      font-size: 1.2rem;
-      background-color: #ff8ec7;
-      color: #fff;
-      border: none;
-      border-radius: 18px;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
-      transition: 0.25s;
+    .card{
+      background:var(--panel);
+      color:var(--ink);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      border:var(--border);
+      overflow:hidden;
+    }
+    .card.soft{
+      background:var(--panel-2);
+      box-shadow:var(--soft);
     }
 
-    .intro button:hover {
-      background-color: #ffaad9;
-      transform: scale(1.06);
+    .pad{padding:22px}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:18px 22px;
+      border-bottom:1px solid rgba(201, 78, 104, 0.12);
+      background: linear-gradient(90deg, rgba(255,77,166,.14), rgba(255,208,231,.15));
     }
 
-    .overlay {
-      background: rgba(255, 240, 246, 0.92);
-      padding: 50px 40px;
-      border-radius: 28px;
-      width: 100%;
-      max-width: 820px;
-      max-height: 85vh;
-      overflow-y: auto;
-      box-shadow: 0 0 25px rgba(255, 180, 200, 0.75);
+    /* ---------- Type ---------- */
+    .kicker{
+      letter-spacing:.24em;
+      font-weight:800;
+      font-size:.78rem;
+      color: rgba(42,16,32,.72);
+      text-transform:uppercase;
+    }
+    h1{
+      font-size:1.65rem;
+      line-height:1.15;
+      color:#3a1224;
+      margin-top:8px;
+    }
+    .sub{
+      margin-top:10px;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:.98rem;
+    }
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      letter-spacing:.04em;
     }
 
-    h1 {
-      font-size: 2.6rem;
-      margin-bottom: 20px;
-      color: #d4587d;
-      text-shadow: 0 0 10px rgba(0,0,0,0.08);
+    /* ---------- Buttons ---------- */
+    .btn{
+      border:0;
+      border-radius:14px;
+      padding:12px 14px;
+      font-weight:800;
+      cursor:pointer;
+      transition: transform .08s ease, filter .18s ease, background .2s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      color:#fff;
+      background: linear-gradient(135deg, var(--pink-1), var(--pink-2));
+      box-shadow: 0 12px 30px rgba(255,77,166,.28);
+    }
+    .btn.primary:hover{filter:saturate(1.1) brightness(1.03)}
+    .btn.ghost{
+      color: #4a1a2c;
+      background: rgba(255,208,231,.55);
+      border: 1px solid rgba(255,77,166,.22);
+    }
+    .btn.ghost:hover{filter:brightness(1.02)}
+    .btn.danger{
+      color:#fff;
+      background: linear-gradient(135deg, #ff3b6f, #ff7aa0);
+    }
+    .btn.small{padding:10px 12px;border-radius:12px;font-weight:900;font-size:.92rem}
+    .btn.link{
+      background: transparent;
+      border: 0;
+      color: rgba(201, 78, 104, 0.92);
+      padding: 6px 8px;
+      border-radius:10px;
+      font-weight:900;
+    }
+    .btn.link:hover{background:rgba(255,208,231,.45)}
+
+    /* ---------- Badges / bars ---------- */
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:.85rem;
+      border: 1px solid rgba(255,77,166,.22);
+      background: rgba(255,208,231,.55);
+      color:#4a1a2c;
+    }
+    .dot{
+      width:9px;height:9px;border-radius:999px;
+      background: linear-gradient(135deg, var(--pink-1), var(--pink-2));
+      box-shadow: 0 0 0 4px rgba(255,77,166,.12);
     }
 
-    p {
-      font-size: 1.3rem;
-      line-height: 1.7;
-      color: #b54567;
+    .bar{
+      height:12px;
+      border-radius:999px;
+      background: rgba(201, 78, 104, 0.10);
+      overflow:hidden;
+      border:1px solid rgba(201, 78, 104, 0.14);
+    }
+    .fill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--pink-1), var(--pink-2));
+      transition: width .35s ease;
+    }
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .muted{color:var(--muted)}
+    .hr{height:1px;background: rgba(201, 78, 104, 0.12); margin:16px 0}
+
+    /* ---------- Skills list ---------- */
+    .skills{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      padding: 18px 22px 22px;
+    }
+    .skill{
+      border-radius:var(--radius2);
+      border: 1px solid rgba(201, 78, 104, 0.16);
+      background: rgba(255,255,255,.74);
+      overflow:hidden;
+    }
+    .skillHead{
+      padding:14px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      cursor:pointer;
+      background: linear-gradient(90deg, rgba(255,208,231,.48), rgba(255,255,255,.0));
+    }
+    .skillLeft{display:flex;align-items:center;gap:12px;min-width:0}
+    .icon{
+      width:38px;height:38px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      background: rgba(255,77,166,.13);
+      border:1px solid rgba(255,77,166,.18);
+      font-size:20px;
+      flex:0 0 auto;
+    }
+    .skillMeta{min-width:0}
+    .skillName{
+      font-weight:1000;
+      font-size:1.02rem;
+      color:#381222;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .skillSub{
+      font-size:.88rem;
+      color: rgba(42,16,32,.62);
+      margin-top:2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .skillRight{
+      display:flex;align-items:center;gap:10px;flex:0 0 auto;
     }
 
-    .hearts {
-      font-size: 2rem;
-      margin: 20px 0;
-      animation: float 2s infinite ease-in-out;
+    .chev{
+      width:34px;height:34px;border-radius:12px;
+      border:1px solid rgba(255,77,166,.20);
+      background: rgba(255,208,231,.55);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:1000;
+      color:#4a1a2c;
+      transition: transform .18s ease;
+    }
+    .skill.open .chev{transform: rotate(180deg)}
+
+    .skillBody{
+      display:none;
+      padding: 12px 14px 14px;
+      border-top:1px solid rgba(201, 78, 104, 0.12);
+      background: rgba(255,255,255,.78);
+    }
+    .skill.open .skillBody{display:block}
+
+    .tasks{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:12px;
+    }
+    .task{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:10px 10px;
+      border-radius:14px;
+      border:1px solid rgba(201, 78, 104, 0.14);
+      background: rgba(255,250,252,.75);
+    }
+    .task input{margin-top:3px; accent-color: var(--pink-1)}
+    .taskText{
+      flex:1;
+      color:#3a1224;
+      font-weight:800;
+      line-height:1.35;
+    }
+    .task.done .taskText{opacity:.55;text-decoration: line-through}
+    .taskActions{display:flex; gap:6px}
+    .x{
+      width:30px;height:30px;border-radius:12px;
+      border:1px solid rgba(255,77,166,.18);
+      background: rgba(255,208,231,.5);
+      cursor:pointer;
+      font-weight:1000;
+      color:#4a1a2c;
     }
 
-    @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0); }
+    /* ---------- Sidebar blocks ---------- */
+    .blockTitle{
+      font-weight:1000;
+      color:#3a1224;
+      margin-top:10px;
+      margin-bottom:10px;
+      font-size:1.02rem;
+    }
+    .kv{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:10px;
+      padding:12px 0;
+      border-bottom:1px dashed rgba(201, 78, 104, 0.18);
+    }
+    .kv:last-child{border-bottom:0}
+    .kv .k{color: rgba(42,16,32,.64); font-weight:900; font-size:.85rem; letter-spacing:.08em}
+    .kv .v{font-weight:1000; color:#381222}
+
+    .gradeList{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+    .gradeItem{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(201, 78, 104, 0.14);
+      background: rgba(255,255,255,.70);
+    }
+    .gradeItem strong{color:#381222}
+    .gradeItem span{color: rgba(42,16,32,.62); font-weight:900}
+    .activeGrade{
+      border-color: rgba(255,77,166,.32);
+      box-shadow: 0 10px 24px rgba(255,77,166,.14);
+      background: rgba(255,208,231,.55);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* ---------- Modal ---------- */
+    .backdrop{
+      position:fixed; inset:0;
+      background: rgba(10,6,12,.62);
+      display:none;
+      align-items:center;justify-content:center;
+      padding:18px;
+      z-index:50;
+    }
+    .backdrop.show{display:flex}
+    .modal{
+      width:min(720px, 100%);
+      border-radius: 22px;
+      background: rgba(255,250,252,.96);
+      border: 1px solid rgba(255,77,166,.22);
+      box-shadow: var(--shadow);
+      color: var(--ink);
+      overflow:hidden;
+    }
+    .modalHead{
+      padding:16px 18px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      background: linear-gradient(90deg, rgba(255,77,166,.16), rgba(255,208,231,.20));
+      border-bottom:1px solid rgba(201, 78, 104, 0.12);
+    }
+    .modalHead h2{font-size:1.05rem;color:#381222}
+    .modalBody{padding:16px 18px}
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    .field label{
+      display:block;
+      font-weight:1000;
+      font-size:.78rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color: rgba(42,16,32,.62);
+      margin-bottom:6px;
+    }
+    .field input, .field select{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(201, 78, 104, 0.18);
+      background: rgba(255,255,255,.78);
+      outline:none;
+      font-weight:800;
+      color:#3a1224;
+    }
+    .field input:focus, .field select:focus{
+      border-color: rgba(255,77,166,.35);
+      box-shadow: 0 0 0 5px rgba(255,77,166,.12);
+    }
+    .modalFoot{
+      padding:14px 18px 18px;
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      border-top:1px solid rgba(201, 78, 104, 0.12);
+    }
+
+    /* ---------- Intro screen ---------- */
+    .introWrap{
+      width:min(980px, 100%);
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap:16px;
+      align-items:stretch;
+    }
+    .hero{
+      padding:26px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,77,166,.18);
+      background: rgba(255,250,252,.92);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+    }
+    .hero h1{font-size:2.1rem}
+    .hero .sub{font-size:1.05rem}
+    .hero .row{margin-top:18px}
+    .stamp{
+      padding:18px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,77,166,.18);
+      background: rgba(255,250,252,.86);
+      color: var(--ink);
+      box-shadow: var(--soft);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .stamp .big{
+      font-size:1.15rem;
+      font-weight:1000;
+      color:#381222;
+    }
+    .stamp .tiny{
+      font-size:.92rem;
+      color: rgba(42,16,32,.62);
+      line-height:1.45;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 920px){
+      .shell{grid-template-columns: 1fr}
+      .introWrap{grid-template-columns: 1fr}
     }
   </style>
 </head>
-<body>
 
-  <!-- Home Screen -->
-  <div id="home" class="screen intro active">
-    <div>
-      <h1>Happy 1 Year, Elly 💗</h1>
-      <button onclick="showAnniversary()">Open Your Surprise</button>
+<body>
+  <!-- INTRO -->
+  <section id="intro" class="screen active">
+    <div class="introWrap">
+      <div class="hero">
+        <div class="kicker mono">[ S Y S T E M ]</div>
+        <h1>Elly’s Skill System 💗</h1>
+        <p class="sub">
+          A cute little task-based leveling tracker.<br />
+          Check off “proof items”, level up your overall rank, and keep our memories + goals in one place.
+        </p>
+
+        <div class="row">
+          <button class="btn primary" id="btnEnter">▶ Enter System</button>
+          <button class="btn ghost" id="btnLoadDemo">Load Demo Skills</button>
+          <span class="pill"><span class="dot"></span> Online (love edition)</span>
+        </div>
+
+        <div class="hr"></div>
+
+        <p class="sub muted">
+          Tip: Everything saves automatically in your browser (localStorage).
+          You can rename the player + semester in Settings.
+        </p>
+      </div>
+
+      <div class="stamp">
+        <div>
+          <div class="kicker mono">PERSONAL LEVELING TRACKER</div>
+          <div class="big" id="introSemester">7 Months Anniversary</div>
+          <div class="tiny">Theme: tulips + pink UI • Mode: tasks & proof • Rank: based on completion %</div>
+        </div>
+        <button class="btn primary" id="btnOpenFromStamp">Open 💌</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <section id="app" class="screen">
+    <div class="shell">
+      <!-- LEFT / SIDEBAR -->
+      <aside class="card soft">
+        <div class="topbar">
+          <div>
+            <div class="kicker mono">[ S Y S T E M ]</div>
+            <div style="font-weight:1000;color:#381222;margin-top:6px">SKILL SYSTEM</div>
+          </div>
+          <span class="pill"><span class="dot"></span> Active</span>
+        </div>
+
+        <div class="pad">
+          <div class="blockTitle">Player</div>
+          <div class="kv">
+            <div class="k mono">NAME</div>
+            <div class="v" id="playerNameView">Elly</div>
+          </div>
+          <div class="kv">
+            <div class="k mono">SEMESTER</div>
+            <div class="v" id="semesterView">7 Months</div>
+          </div>
+          <div class="kv">
+            <div class="k mono">WEEK</div>
+            <div class="v" id="weekView">1</div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="row" style="align-items:flex-end">
+            <div>
+              <div class="blockTitle" style="margin:0 0 8px 0">Overall Rank</div>
+              <div style="font-weight:1000;font-size:1.35rem;color:#381222" id="rankView">⬡ 4TH GRADE</div>
+              <div class="muted" style="font-weight:900;margin-top:6px" id="percentView">0% complete</div>
+            </div>
+            <div style="min-width:160px; width: 42%;">
+              <div class="bar"><div class="fill" id="overallFill"></div></div>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="blockTitle">Grade Thresholds</div>
+          <div class="gradeList" id="gradeList"></div>
+
+          <div class="hr"></div>
+
+          <div class="blockTitle">Actions</div>
+          <div class="row">
+            <button class="btn ghost small" id="btnSettings">⚙ Settings</button>
+            <button class="btn danger small" id="btnReset">Reset</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT / MAIN -->
+      <main class="card">
+        <div class="topbar">
+          <div>
+            <div class="kicker mono">[ S Y S T E M ]</div>
+            <h1 style="margin:8px 0 0 0">Tasks & Skills</h1>
+            <div class="sub" style="margin-top:8px">
+              Add skills, add proof tasks, tick them off. Your overall rank updates instantly.
+            </div>
+          </div>
+
+          <div class="row" style="justify-content:flex-end">
+            <button class="btn ghost" id="btnAddSkill">＋ Add Skill</button>
+          </div>
+        </div>
+
+        <div class="skills" id="skillsRoot"></div>
+
+        <div style="padding: 0 22px 22px;">
+          <div class="card soft" style="border-radius:18px">
+            <div class="pad">
+              <div class="kicker mono">💌 NOTE</div>
+              <div class="sub" style="margin-top:10px">
+                You can use this like a cute “relationship quest log” too:
+                <span class="mono">dates</span>, <span class="mono">memories</span>, <span class="mono">goals</span>, <span class="mono">little wins</span>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </section>
+
+  <!-- MODAL: ADD SKILL -->
+  <div class="backdrop" id="skillModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="skillTitle">
+      <div class="modalHead">
+        <h2 id="skillTitle" class="mono">REGISTER NEW SKILL</h2>
+        <button class="btn link" id="btnCloseSkill">✕</button>
+      </div>
+      <div class="modalBody">
+        <div class="grid">
+          <div class="field">
+            <label>Skill Name</label>
+            <input id="skillName" placeholder="e.g., Date Nights" maxlength="42">
+          </div>
+          <div class="field">
+            <label>Category / Subtitle</label>
+            <input id="skillSub" placeholder="e.g., Quality Time quests" maxlength="56">
+          </div>
+          <div class="field">
+            <label>Icon (emoji)</label>
+            <input id="skillIcon" placeholder="💗" maxlength="3">
+          </div>
+          <div class="field">
+            <label>Start with tasks?</label>
+            <select id="skillPreset">
+              <option value="none">No (empty)</option>
+              <option value="relationship">Relationship Quest Pack</option>
+              <option value="study">Study / Grind Pack</option>
+              <option value="fitness">Active / Fitness Pack</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="field">
+          <label>First task (optional)</label>
+          <input id="skillFirstTask" placeholder="e.g., Plan a cute date idea" maxlength="80">
+        </div>
+      </div>
+      <div class="modalFoot">
+        <button class="btn ghost" id="btnCancelSkill">Cancel</button>
+        <button class="btn primary" id="btnCreateSkill">Confirm</button>
+      </div>
     </div>
   </div>
 
-  <!-- Anniversary Screen -->
-  <div id="anniversary" class="screen">
-    <div class="overlay">
-      <div class="hearts">💞💗💞</div>
-      <h1>Happy 1 Year Anniversary, Elly 🌸</h1>
-      <p>
-        Elly, this year with you has truly been magical. I’m so grateful you gave a guy like me a chance, even when I mess up and don't always get things right. I feel so lucky to have an amazing girlfriend like you (and our little babies too).I've learnt so much about and from you and i feel like i've seen myself grow as a person for the better .i'm grateful for every moment we've shared , from lil dates to hangouts to even just late night talks and I'm glad all of this was with you . I love you more than I can ever put into words. Happy 1 year.<br /><br />
-        I love you so much, Elly. Forever and always. 💖
-      </p>
-      <div class="hearts">🌷💗🌷</div>
+  <!-- MODAL: SETTINGS -->
+  <div class="backdrop" id="settingsModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <div class="modalHead">
+        <h2 id="settingsTitle" class="mono">SETTINGS</h2>
+        <button class="btn link" id="btnCloseSettings">✕</button>
+      </div>
+      <div class="modalBody">
+        <div class="grid">
+          <div class="field">
+            <label>Player Name</label>
+            <input id="setPlayerName" placeholder="Elly" maxlength="30">
+          </div>
+          <div class="field">
+            <label>Semester Name</label>
+            <input id="setSemester" placeholder="7 Months" maxlength="40">
+          </div>
+          <div class="field">
+            <label>Current Week</label>
+            <input id="setWeek" type="number" min="1" max="99">
+          </div>
+          <div class="field">
+            <label>Quick Add</label>
+            <select id="setQuickAdd">
+              <option value="none">—</option>
+              <option value="memories">Add “Memories” skill</option>
+              <option value="dates">Add “Dates” skill</option>
+              <option value="letters">Add “Little Letters” skill</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="sub muted">
+          “Reset” clears everything on this device. If you want a shareable version later, I can convert this to a Firebase / Google sign-in build.
+        </div>
+      </div>
+      <div class="modalFoot">
+        <button class="btn ghost" id="btnCancelSettings">Cancel</button>
+        <button class="btn primary" id="btnSaveSettings">Save</button>
+      </div>
     </div>
   </div>
 
   <script>
-    function showAnniversary() {
-      document.getElementById('home').classList.remove('active');
-      document.getElementById('anniversary').classList.add('active');
+    /* ------------------------------
+      Storage + State
+    ------------------------------ */
+    const LS_KEY = "elly_skill_system_v1";
+
+    const GRADES = [
+      { name: "⬡ 4TH GRADE", min: 0,  max: 39, note: "Below targets — keep pushing" },
+      { name: "3RD GRADE",    min: 40, max: 59, note: "Making progress" },
+      { name: "⬜ 2ND GRADE",  min: 60, max: 74, note: "Solid competence" },
+      { name: "1ST GRADE",    min: 75, max: 89, note: "Meeting & exceeding targets" },
+      { name: "SPECIAL GRADE",min: 90, max: 100,note: "Way beyond all targets" },
+    ];
+
+    const defaultState = () => ({
+      player: "Elly",
+      semester: "Happy 7 Months 💗",
+      week: 1,
+      skills: [
+        {
+          id: crypto.randomUUID(),
+          name: "Memories",
+          subtitle: "Little proof items we never forget",
+          icon: "📸",
+          tasks: [
+            { id: crypto.randomUUID(), text: "Add 3 favourite photos", done: false },
+            { id: crypto.randomUUID(), text: "Write 1 tiny caption for each", done: false },
+            { id: crypto.randomUUID(), text: "Pick our 'photo of the month'", done: false },
+          ],
+          open: true
+        },
+        {
+          id: crypto.randomUUID(),
+          name: "Quality Time",
+          subtitle: "Date quests + tiny traditions",
+          icon: "💗",
+          tasks: [
+            { id: crypto.randomUUID(), text: "Plan a cute date idea", done: false },
+            { id: crypto.randomUUID(), text: "Do one 'no phones' hour", done: false },
+            { id: crypto.randomUUID(), text: "Send one sweet voice note", done: false },
+          ],
+          open: false
+        }
+      ]
+    });
+
+    let state = loadState();
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(LS_KEY);
+        if(!raw) return defaultState();
+        const parsed = JSON.parse(raw);
+        // minimal guard
+        if(!parsed || !Array.isArray(parsed.skills)) return defaultState();
+        return parsed;
+      }catch(e){
+        return defaultState();
+      }
     }
+    function saveState(){
+      localStorage.setItem(LS_KEY, JSON.stringify(state));
+    }
+
+    /* ------------------------------
+      Helpers
+    ------------------------------ */
+    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+    function skillPercent(skill){
+      const total = skill.tasks.length;
+      if(total === 0) return 0;
+      const done = skill.tasks.filter(t => t.done).length;
+      return Math.round((done/total)*100);
+    }
+
+    function overallPercent(){
+      // overall: total tasks done / total tasks
+      let total = 0, done = 0;
+      for(const s of state.skills){
+        total += s.tasks.length;
+        done  += s.tasks.filter(t => t.done).length;
+      }
+      if(total === 0) return 0;
+      return Math.round((done/total)*100);
+    }
+
+    function getGrade(p){
+      for(const g of GRADES){
+        if(p >= g.min && p <= g.max) return g;
+      }
+      return GRADES[0];
+    }
+
+    function escapeHtml(str){
+      return String(str).replace(/[&<>"']/g, (m)=>({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    /* ------------------------------
+      Render
+    ------------------------------ */
+    const $ = (sel) => document.querySelector(sel);
+
+    function renderSidebar(){
+      $("#playerNameView").textContent = state.player || "PLAYER";
+      $("#semesterView").textContent = state.semester || "—";
+      $("#weekView").textContent = state.week ?? "—";
+
+      const p = overallPercent();
+      const grade = getGrade(p);
+
+      $("#rankView").textContent = grade.name;
+      $("#percentView").textContent = `${p}% complete`;
+      $("#overallFill").style.width = `${p}%`;
+
+      // grade list
+      const root = $("#gradeList");
+      root.innerHTML = "";
+      for(const g of GRADES){
+        const item = document.createElement("div");
+        item.className = "gradeItem" + (g.name === grade.name ? " activeGrade" : "");
+        item.innerHTML = `
+          <div>
+            <strong class="mono">${escapeHtml(g.name)}</strong>
+            <div style="margin-top:4px;color:rgba(42,16,32,.62);font-weight:900;font-size:.9rem">
+              ${g.min}–${g.max}%
+            </div>
+          </div>
+          <span>${escapeHtml(g.note)}</span>
+        `;
+        root.appendChild(item);
+      }
+    }
+
+    function renderSkills(){
+      const root = $("#skillsRoot");
+      root.innerHTML = "";
+
+      if(state.skills.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "card soft";
+        empty.style.borderRadius = "18px";
+        empty.innerHTML = `
+          <div class="pad">
+            <div class="kicker mono">NO SKILLS YET</div>
+            <div class="sub" style="margin-top:10px">
+              Add your first skill to start leveling up ✨
+            </div>
+            <div style="margin-top:14px">
+              <button class="btn primary" id="emptyAdd">＋ Add Skill</button>
+            </div>
+          </div>
+        `;
+        root.appendChild(empty);
+        setTimeout(()=> {
+          const b = $("#emptyAdd");
+          if(b) b.onclick = openSkillModal;
+        }, 0);
+        return;
+      }
+
+      state.skills.forEach((skill, idx) => {
+        const p = skillPercent(skill);
+
+        const wrap = document.createElement("div");
+        wrap.className = "skill" + (skill.open ? " open" : "");
+        wrap.innerHTML = `
+          <div class="skillHead" data-skill="${skill.id}">
+            <div class="skillLeft">
+              <div class="icon" aria-hidden="true">${escapeHtml(skill.icon || "💗")}</div>
+              <div class="skillMeta">
+                <div class="skillName">${escapeHtml(skill.name)}</div>
+                <div class="skillSub">${escapeHtml(skill.subtitle || "—")}</div>
+              </div>
+            </div>
+            <div class="skillRight">
+              <span class="pill mono">${p}%</span>
+              <div class="chev">⌄</div>
+            </div>
+          </div>
+
+          <div class="skillBody">
+            <div class="row">
+              <div style="flex:1; min-width:200px">
+                <div class="bar"><div class="fill" style="width:${p}%"></div></div>
+                <div class="muted" style="margin-top:8px;font-weight:900">
+                  ${skill.tasks.filter(t=>t.done).length} / ${skill.tasks.length} tasks complete
+                </div>
+              </div>
+
+              <div class="row" style="justify-content:flex-end">
+                <button class="btn ghost small" data-addtask="${skill.id}">＋ Add Task</button>
+                <button class="btn ghost small" data-delSkill="${skill.id}">Delete</button>
+              </div>
+            </div>
+
+            <div class="tasks">
+              ${skill.tasks.map(t => `
+                <div class="task ${t.done ? "done" : ""}" data-task="${t.id}" data-skill="${skill.id}">
+                  <input type="checkbox" ${t.done ? "checked" : ""} aria-label="Complete task">
+                  <div class="taskText">${escapeHtml(t.text)}</div>
+                  <div class="taskActions">
+                    <button class="x" title="Delete task" data-delTask="${skill.id}::${t.id}">✕</button>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+
+            ${skill.tasks.length === 0 ? `
+              <div class="sub muted" style="margin-top:12px">
+                No tasks yet — add your first proof item ✨
+              </div>
+            ` : ``}
+          </div>
+        `;
+
+        root.appendChild(wrap);
+      });
+
+      // handlers
+      root.querySelectorAll(".skillHead").forEach(el => {
+        el.addEventListener("click", () => {
+          const id = el.getAttribute("data-skill");
+          const s = state.skills.find(x => x.id === id);
+          if(!s) return;
+          s.open = !s.open;
+          saveState();
+          rerender();
+        });
+      });
+
+      root.querySelectorAll("[data-addtask]").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const id = btn.getAttribute("data-addtask");
+          addTaskFlow(id);
+        });
+      });
+
+      root.querySelectorAll("[data-delSkill]").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const id = btn.getAttribute("data-delSkill");
+          if(confirm("Delete this skill and all its tasks?")){
+            state.skills = state.skills.filter(s => s.id !== id);
+            saveState();
+            rerender();
+          }
+        });
+      });
+
+      root.querySelectorAll("[data-delTask]").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const [skillId, taskId] = btn.getAttribute("data-delTask").split("::");
+          const s = state.skills.find(x => x.id === skillId);
+          if(!s) return;
+          s.tasks = s.tasks.filter(t => t.id !== taskId);
+          saveState();
+          rerender();
+        });
+      });
+
+      root.querySelectorAll(".task input[type='checkbox']").forEach(chk => {
+        chk.addEventListener("change", (e) => {
+          const wrap = chk.closest(".task");
+          const skillId = wrap.getAttribute("data-skill");
+          const taskId = wrap.getAttribute("data-task");
+          const s = state.skills.find(x => x.id === skillId);
+          if(!s) return;
+          const t = s.tasks.find(x => x.id === taskId);
+          if(!t) return;
+          t.done = chk.checked;
+          saveState();
+          rerender(false); // keep open states
+        });
+      });
+    }
+
+    function rerender(scrollTop=true){
+      renderSidebar();
+      renderSkills();
+      if(scrollTop) window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    /* ------------------------------
+      Flows
+    ------------------------------ */
+    function addTaskFlow(skillId){
+      const text = prompt("Add a new task / proof item:");
+      if(!text) return;
+      const s = state.skills.find(x => x.id === skillId);
+      if(!s) return;
+      s.tasks.push({ id: crypto.randomUUID(), text: text.trim().slice(0,80), done:false });
+      s.open = true;
+      saveState();
+      rerender(false);
+    }
+
+    function createSkill({name, subtitle, icon, preset, firstTask}){
+      const tasks = [];
+
+      if(preset === "relationship"){
+        tasks.push(
+          {id: crypto.randomUUID(), text:"Plan a date idea (simple + cute)", done:false},
+          {id: crypto.randomUUID(), text:"Do one 'tiny tradition' together", done:false},
+          {id: crypto.randomUUID(), text:"Write a 5-line appreciation note", done:false}
+        );
+      }else if(preset === "study"){
+        tasks.push(
+          {id: crypto.randomUUID(), text:"45-min focused session (no distractions)", done:false},
+          {id: crypto.randomUUID(), text:"Make 10 flashcards or 1-page summary", done:false},
+          {id: crypto.randomUUID(), text:"Do 10 practice questions", done:false}
+        );
+      }else if(preset === "fitness"){
+        tasks.push(
+          {id: crypto.randomUUID(), text:"30–45 min active session", done:false},
+          {id: crypto.randomUUID(), text:"Stretch 10 minutes", done:false},
+          {id: crypto.randomUUID(), text:"Hydrate + 7k steps", done:false}
+        );
+      }
+
+      if(firstTask && firstTask.trim()){
+        tasks.unshift({id: crypto.randomUUID(), text:firstTask.trim().slice(0,80), done:false});
+      }
+
+      state.skills.unshift({
+        id: crypto.randomUUID(),
+        name: name.trim().slice(0,42) || "New Skill",
+        subtitle: (subtitle || "").trim().slice(0,56) || "—",
+        icon: (icon || "💗").trim().slice(0,3) || "💗",
+        tasks,
+        open:true
+      });
+
+      saveState();
+      rerender();
+    }
+
+    /* ------------------------------
+      Modals
+    ------------------------------ */
+    const skillModal = $("#skillModal");
+    const settingsModal = $("#settingsModal");
+
+    function openSkillModal(){
+      $("#skillName").value = "";
+      $("#skillSub").value = "";
+      $("#skillIcon").value = "💗";
+      $("#skillPreset").value = "relationship";
+      $("#skillFirstTask").value = "";
+      skillModal.classList.add("show");
+      $("#skillName").focus();
+    }
+    function closeSkillModal(){ skillModal.classList.remove("show"); }
+
+    function openSettings(){
+      $("#setPlayerName").value = state.player || "";
+      $("#setSemester").value = state.semester || "";
+      $("#setWeek").value = state.week || 1;
+      $("#setQuickAdd").value = "none";
+      settingsModal.classList.add("show");
+      $("#setPlayerName").focus();
+    }
+    function closeSettings(){ settingsModal.classList.remove("show"); }
+
+    /* ------------------------------
+      Screen switching
+    ------------------------------ */
+    function enterApp(){
+      $("#intro").classList.remove("active");
+      $("#app").classList.add("active");
+      rerender();
+    }
+
+    /* ------------------------------
+      Wiring
+    ------------------------------ */
+    $("#btnEnter").onclick = enterApp;
+    $("#btnOpenFromStamp").onclick = enterApp;
+
+    $("#btnAddSkill").onclick = openSkillModal;
+    $("#btnCloseSkill").onclick = closeSkillModal;
+    $("#btnCancelSkill").onclick = closeSkillModal;
+    skillModal.addEventListener("click", (e)=>{ if(e.target === skillModal) closeSkillModal(); });
+
+    $("#btnCreateSkill").onclick = () => {
+      createSkill({
+        name: $("#skillName").value,
+        subtitle: $("#skillSub").value,
+        icon: $("#skillIcon").value,
+        preset: $("#skillPreset").value,
+        firstTask: $("#skillFirstTask").value
+      });
+      closeSkillModal();
+    };
+
+    $("#btnSettings").onclick = openSettings;
+    $("#btnCloseSettings").onclick = closeSettings;
+    $("#btnCancelSettings").onclick = closeSettings;
+    settingsModal.addEventListener("click", (e)=>{ if(e.target === settingsModal) closeSettings(); });
+
+    $("#btnSaveSettings").onclick = () => {
+      state.player = ($("#setPlayerName").value || "PLAYER").trim().slice(0,30);
+      state.semester = ($("#setSemester").value || "—").trim().slice(0,40);
+      const w = parseInt($("#setWeek").value, 10);
+      state.week = clamp(isNaN(w) ? 1 : w, 1, 99);
+
+      const qa = $("#setQuickAdd").value;
+      if(qa !== "none"){
+        const map = {
+          memories: {name:"Memories", subtitle:"Photos + captions + moments", icon:"📸", preset:"none"},
+          dates:    {name:"Dates", subtitle:"Plans, ideas, little adventures", icon:"🌷", preset:"relationship"},
+          letters:  {name:"Little Letters", subtitle:"Notes, voice notes, sweet things", icon:"💌", preset:"relationship"},
+        };
+        const s = map[qa];
+        if(s){
+          createSkill({name:s.name, subtitle:s.subtitle, icon:s.icon, preset:s.preset, firstTask:""});
+        }
+      }
+
+      saveState();
+      rerender(false);
+      closeSettings();
+    };
+
+    $("#btnReset").onclick = () => {
+      if(confirm("Reset ALL data on this device? This cannot be undone.")){
+        localStorage.removeItem(LS_KEY);
+        state = defaultState();
+        saveState();
+        rerender();
+        // go back to intro for the cute effect
+        $("#app").classList.remove("active");
+        $("#intro").classList.add("active");
+      }
+    };
+
+    $("#btnLoadDemo").onclick = () => {
+      state = defaultState();
+      // add a couple more demo skills (cute vibe)
+      state.skills.push({
+        id: crypto.randomUUID(),
+        name: "Communication",
+        subtitle: "Soft words, honest talks",
+        icon: "🫶",
+        tasks: [
+          {id: crypto.randomUUID(), text:"Ask: 'How are you really?'", done:false},
+          {id: crypto.randomUUID(), text:"Share one thing you’re grateful for", done:false},
+          {id: crypto.randomUUID(), text:"One calm check-in call", done:false}
+        ],
+        open:false
+      });
+      state.skills.push({
+        id: crypto.randomUUID(),
+        name: "Future Plans",
+        subtitle: "Tiny steps, big dreams",
+        icon: "✨",
+        tasks: [
+          {id: crypto.randomUUID(), text:"Make a mini bucket list (5 items)", done:false},
+          {id: crypto.randomUUID(), text:"Pick 1 thing to do this month", done:false}
+        ],
+        open:false
+      });
+
+      saveState();
+      $("#introSemester").textContent = state.semester;
+      alert("Demo loaded 💗 Click Enter System.");
+    };
+
+    // init intro label from state
+    $("#introSemester").textContent = state.semester;
+
+    // initial sidebar/skills render only once you enter app
   </script>
 </body>
 </html>
