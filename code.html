@@ -1,1135 +1,1142 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>For Elly 💌 — Skill System</title>
-  <style>
-    :root{
-      --bg: #0c0a0f;
-      --panel: rgba(255, 250, 252, 0.92);
-      --panel-2: rgba(255, 250, 252, 0.80);
-      --ink: #2a1020;
-      --muted: rgba(42, 16, 32, 0.62);
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Planner 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fdf0f5;
+  --surface: #ffffff;
+  --surface2: #fff5f9;
+  --border: #f5c6d8;
+  --pink-100: #fce4ec;
+  --pink-200: #f8bbd0;
+  --pink-300: #f48fb1;
+  --pink-400: #f06292;
+  --pink-500: #e91e8c;
+  --pink-600: #c2185b;
+  --text-main: #3d1a2a;
+  --text-body: #7a3d55;
+  --text-muted: #b07090;
+  --shadow: 0 2px 20px rgba(233,30,140,0.08);
+  --shadow-lg: 0 8px 40px rgba(233,30,140,0.13);
+  --radius: 18px;
+  --radius-sm: 10px;
+}
 
-      --pink-1:#ff4da6;
-      --pink-2:#ff7cc6;
-      --pink-3:#ffd0e7;
-      --rose:#c94e68;
+* { margin:0; padding:0; box-sizing:border-box; }
 
-      --shadow: 0 18px 55px rgba(0,0,0,.35);
-      --soft: 0 10px 25px rgba(0,0,0,.18);
-      --radius: 18px;
-      --radius2: 14px;
-      --border: 1px solid rgba(201, 78, 104, 0.18);
-    }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-    body{
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      color:#fff;
-      background:
-        radial-gradient(1200px 600px at 15% 5%, rgba(255,77,166,.28), transparent 55%),
-        radial-gradient(1000px 600px at 85% 15%, rgba(255,124,198,.22), transparent 60%),
-        url('https://amsterdamian.com/wp-content/uploads/2021/03/tulips-7jpg_s.jpg') no-repeat center center fixed;
-      background-size: cover;
-      overflow-x:hidden;
-    }
+/* ─── LAYOUT ─── */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
 
-    /* ---------- Screens ---------- */
-    .screen{
-      min-height:100vh;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:22px;
-    }
-    .screen.active{display:flex; animation: fadeIn .55s ease-out}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: 230px;
+  background: var(--surface);
+  border-right: 1.5px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.2rem;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 50;
+}
 
-    /* ---------- Shell ---------- */
-    .shell{
-      width:min(1150px, 100%);
-      display:grid;
-      grid-template-columns: 360px 1fr;
-      gap:18px;
-    }
+.logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  color: var(--pink-500);
+  margin-bottom: 0.3rem;
+  padding-left: 0.4rem;
+}
+.logo-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding-left: 0.4rem;
+  margin-bottom: 2rem;
+}
 
-    .card{
-      background:var(--panel);
-      color:var(--ink);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      border:var(--border);
-      overflow:hidden;
-    }
-    .card.soft{
-      background:var(--panel-2);
-      box-shadow:var(--soft);
-    }
+.nav-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-body);
+  transition: all 0.18s;
+  margin-bottom: 0.25rem;
+  user-select: none;
+}
+.nav-item:hover { background: var(--pink-100); color: var(--pink-600); }
+.nav-item.active { background: var(--pink-500); color: white; }
+.nav-item .icon { font-size: 1.1rem; width: 1.5rem; text-align: center; }
 
-    .pad{padding:22px}
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:18px 22px;
-      border-bottom:1px solid rgba(201, 78, 104, 0.12);
-      background: linear-gradient(90deg, rgba(255,77,166,.14), rgba(255,208,231,.15));
-    }
+.sidebar-bottom {
+  margin-top: auto;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding-left: 0.4rem;
+  line-height: 1.8;
+}
+.sidebar-bottom strong { color: var(--pink-400); font-size: 1rem; }
 
-    /* ---------- Type ---------- */
-    .kicker{
-      letter-spacing:.24em;
-      font-weight:800;
-      font-size:.78rem;
-      color: rgba(42,16,32,.72);
-      text-transform:uppercase;
-    }
-    h1{
-      font-size:1.65rem;
-      line-height:1.15;
-      color:#3a1224;
-      margin-top:8px;
-    }
-    .sub{
-      margin-top:10px;
-      color:var(--muted);
-      line-height:1.55;
-      font-size:.98rem;
-    }
-    .mono{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      letter-spacing:.04em;
-    }
+/* ─── MAIN ─── */
+.main {
+  margin-left: 230px;
+  flex: 1;
+  padding: 2.5rem 2.5rem;
+  max-width: calc(100vw - 230px);
+}
 
-    /* ---------- Buttons ---------- */
-    .btn{
-      border:0;
-      border-radius:14px;
-      padding:12px 14px;
-      font-weight:800;
-      cursor:pointer;
-      transition: transform .08s ease, filter .18s ease, background .2s ease;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      user-select:none;
-      white-space:nowrap;
-    }
-    .btn:active{transform:translateY(1px)}
-    .btn.primary{
-      color:#fff;
-      background: linear-gradient(135deg, var(--pink-1), var(--pink-2));
-      box-shadow: 0 12px 30px rgba(255,77,166,.28);
-    }
-    .btn.primary:hover{filter:saturate(1.1) brightness(1.03)}
-    .btn.ghost{
-      color: #4a1a2c;
-      background: rgba(255,208,231,.55);
-      border: 1px solid rgba(255,77,166,.22);
-    }
-    .btn.ghost:hover{filter:brightness(1.02)}
-    .btn.danger{
-      color:#fff;
-      background: linear-gradient(135deg, #ff3b6f, #ff7aa0);
-    }
-    .btn.small{padding:10px 12px;border-radius:12px;font-weight:900;font-size:.92rem}
-    .btn.link{
-      background: transparent;
-      border: 0;
-      color: rgba(201, 78, 104, 0.92);
-      padding: 6px 8px;
-      border-radius:10px;
-      font-weight:900;
-    }
-    .btn.link:hover{background:rgba(255,208,231,.45)}
+.page { display: none; animation: fadeIn 0.3s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
 
-    /* ---------- Badges / bars ---------- */
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      font-weight:900;
-      font-size:.85rem;
-      border: 1px solid rgba(255,77,166,.22);
-      background: rgba(255,208,231,.55);
-      color:#4a1a2c;
-    }
-    .dot{
-      width:9px;height:9px;border-radius:999px;
-      background: linear-gradient(135deg, var(--pink-1), var(--pink-2));
-      box-shadow: 0 0 0 4px rgba(255,77,166,.12);
-    }
+.page-header {
+  margin-bottom: 2rem;
+}
+.page-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+.page-title span { color: var(--pink-500); font-style: italic; }
+.page-sub { font-size: 0.9rem; color: var(--text-muted); margin-top: 0.3rem; }
 
-    .bar{
-      height:12px;
-      border-radius:999px;
-      background: rgba(201, 78, 104, 0.10);
-      overflow:hidden;
-      border:1px solid rgba(201, 78, 104, 0.14);
-    }
-    .fill{
-      height:100%;
-      width:0%;
-      background: linear-gradient(90deg, var(--pink-1), var(--pink-2));
-      transition: width .35s ease;
-    }
-    .row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .muted{color:var(--muted)}
-    .hr{height:1px;background: rgba(201, 78, 104, 0.12); margin:16px 0}
+/* ─── CARDS ─── */
+.card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
 
-    /* ---------- Skills list ---------- */
-    .skills{
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-      padding: 18px 22px 22px;
-    }
-    .skill{
-      border-radius:var(--radius2);
-      border: 1px solid rgba(201, 78, 104, 0.16);
-      background: rgba(255,255,255,.74);
-      overflow:hidden;
-    }
-    .skillHead{
-      padding:14px 14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      cursor:pointer;
-      background: linear-gradient(90deg, rgba(255,208,231,.48), rgba(255,255,255,.0));
-    }
-    .skillLeft{display:flex;align-items:center;gap:12px;min-width:0}
-    .icon{
-      width:38px;height:38px;border-radius:14px;
-      display:flex;align-items:center;justify-content:center;
-      background: rgba(255,77,166,.13);
-      border:1px solid rgba(255,77,166,.18);
-      font-size:20px;
-      flex:0 0 auto;
-    }
-    .skillMeta{min-width:0}
-    .skillName{
-      font-weight:1000;
-      font-size:1.02rem;
-      color:#381222;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .skillSub{
-      font-size:.88rem;
-      color: rgba(42,16,32,.62);
-      margin-top:2px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .skillRight{
-      display:flex;align-items:center;gap:10px;flex:0 0 auto;
-    }
+/* ════════════════════════════════
+   PAGE: DASHBOARD
+════════════════════════════════ */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+.dash-wide { grid-column: 1 / -1; }
 
-    .chev{
-      width:34px;height:34px;border-radius:12px;
-      border:1px solid rgba(255,77,166,.20);
-      background: rgba(255,208,231,.55);
-      display:flex;align-items:center;justify-content:center;
-      font-weight:1000;
-      color:#4a1a2c;
-      transition: transform .18s ease;
-    }
-    .skill.open .chev{transform: rotate(180deg)}
+.stat-row {
+  display: flex; gap: 1rem; margin-bottom: 1.2rem;
+}
+.stat-pill {
+  flex: 1;
+  background: var(--pink-100);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.2rem;
+  text-align: center;
+}
+.stat-pill .num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem; color: var(--pink-500);
+}
+.stat-pill .lbl { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
 
-    .skillBody{
-      display:none;
-      padding: 12px 14px 14px;
-      border-top:1px solid rgba(201, 78, 104, 0.12);
-      background: rgba(255,255,255,.78);
-    }
-    .skill.open .skillBody{display:block}
+.today-tasks-list { list-style: none; }
+.today-tasks-list li {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem; color: var(--text-body);
+}
+.today-tasks-list li:last-child { border-bottom: none; }
+.today-tasks-list li.done span { text-decoration: line-through; color: var(--text-muted); }
+.task-cb { accent-color: var(--pink-500); width: 16px; height: 16px; cursor: pointer; }
 
-    .tasks{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      margin-top:12px;
-    }
-    .task{
-      display:flex;
-      align-items:flex-start;
-      gap:10px;
-      padding:10px 10px;
-      border-radius:14px;
-      border:1px solid rgba(201, 78, 104, 0.14);
-      background: rgba(255,250,252,.75);
-    }
-    .task input{margin-top:3px; accent-color: var(--pink-1)}
-    .taskText{
-      flex:1;
-      color:#3a1224;
-      font-weight:800;
-      line-height:1.35;
-    }
-    .task.done .taskText{opacity:.55;text-decoration: line-through}
-    .taskActions{display:flex; gap:6px}
-    .x{
-      width:30px;height:30px;border-radius:12px;
-      border:1px solid rgba(255,77,166,.18);
-      background: rgba(255,208,231,.5);
-      cursor:pointer;
-      font-weight:1000;
-      color:#4a1a2c;
-    }
+.quote-card {
+  background: linear-gradient(135deg, var(--pink-500), var(--pink-400));
+  color: white; border: none;
+  text-align: center;
+}
+.quote-card .q {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+.quote-card .q-author { font-size: 0.8rem; opacity: 0.8; }
 
-    /* ---------- Sidebar blocks ---------- */
-    .blockTitle{
-      font-weight:1000;
-      color:#3a1224;
-      margin-top:10px;
-      margin-bottom:10px;
-      font-size:1.02rem;
-    }
-    .kv{
-      display:grid;
-      grid-template-columns: 1fr auto;
-      gap:10px;
-      padding:12px 0;
-      border-bottom:1px dashed rgba(201, 78, 104, 0.18);
-    }
-    .kv:last-child{border-bottom:0}
-    .kv .k{color: rgba(42,16,32,.64); font-weight:900; font-size:.85rem; letter-spacing:.08em}
-    .kv .v{font-weight:1000; color:#381222}
+/* ════════════════════════════════
+   PAGE: TASKS
+════════════════════════════════ */
+.tasks-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 
-    .gradeList{display:flex;flex-direction:column;gap:10px;margin-top:10px}
-    .gradeItem{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(201, 78, 104, 0.14);
-      background: rgba(255,255,255,.70);
-    }
-    .gradeItem strong{color:#381222}
-    .gradeItem span{color: rgba(42,16,32,.62); font-weight:900}
-    .activeGrade{
-      border-color: rgba(255,77,166,.32);
-      box-shadow: 0 10px 24px rgba(255,77,166,.14);
-      background: rgba(255,208,231,.55);
-    }
+.add-task-form {
+  display: flex; flex-direction: column; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.form-row { display: flex; gap: 0.6rem; }
 
-    /* ---------- Modal ---------- */
-    .backdrop{
-      position:fixed; inset:0;
-      background: rgba(10,6,12,.62);
-      display:none;
-      align-items:center;justify-content:center;
-      padding:18px;
-      z-index:50;
-    }
-    .backdrop.show{display:flex}
-    .modal{
-      width:min(720px, 100%);
-      border-radius: 22px;
-      background: rgba(255,250,252,.96);
-      border: 1px solid rgba(255,77,166,.22);
-      box-shadow: var(--shadow);
-      color: var(--ink);
-      overflow:hidden;
-    }
-    .modalHead{
-      padding:16px 18px;
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      background: linear-gradient(90deg, rgba(255,77,166,.16), rgba(255,208,231,.20));
-      border-bottom:1px solid rgba(201, 78, 104, 0.12);
-    }
-    .modalHead h2{font-size:1.05rem;color:#381222}
-    .modalBody{padding:16px 18px}
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-    .field label{
-      display:block;
-      font-weight:1000;
-      font-size:.78rem;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      color: rgba(42,16,32,.62);
-      margin-bottom:6px;
-    }
-    .field input, .field select{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(201, 78, 104, 0.18);
-      background: rgba(255,255,255,.78);
-      outline:none;
-      font-weight:800;
-      color:#3a1224;
-    }
-    .field input:focus, .field select:focus{
-      border-color: rgba(255,77,166,.35);
-      box-shadow: 0 0 0 5px rgba(255,77,166,.12);
-    }
-    .modalFoot{
-      padding:14px 18px 18px;
-      display:flex;
-      justify-content:flex-end;
-      gap:10px;
-      border-top:1px solid rgba(201, 78, 104, 0.12);
-    }
+input[type="text"], input[type="date"], select, textarea {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.9rem;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.18s;
+  width: 100%;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--pink-400); }
+input::placeholder, textarea::placeholder { color: var(--text-muted); }
 
-    /* ---------- Intro screen ---------- */
-    .introWrap{
-      width:min(980px, 100%);
-      display:grid;
-      grid-template-columns: 1.25fr .75fr;
-      gap:16px;
-      align-items:stretch;
-    }
-    .hero{
-      padding:26px;
-      border-radius: 26px;
-      border: 1px solid rgba(255,77,166,.18);
-      background: rgba(255,250,252,.92);
-      color: var(--ink);
-      box-shadow: var(--shadow);
-    }
-    .hero h1{font-size:2.1rem}
-    .hero .sub{font-size:1.05rem}
-    .hero .row{margin-top:18px}
-    .stamp{
-      padding:18px;
-      border-radius: 26px;
-      border: 1px solid rgba(255,77,166,.18);
-      background: rgba(255,250,252,.86);
-      color: var(--ink);
-      box-shadow: var(--soft);
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .stamp .big{
-      font-size:1.15rem;
-      font-weight:1000;
-      color:#381222;
-    }
-    .stamp .tiny{
-      font-size:.92rem;
-      color: rgba(42,16,32,.62);
-      line-height:1.45;
-    }
+.btn {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600; font-size: 0.875rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-sm);
+  border: none; cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--pink-500); color: white; }
+.btn-primary:hover { background: var(--pink-600); transform: translateY(-1px); }
+.btn-ghost { background: var(--pink-100); color: var(--pink-600); }
+.btn-ghost:hover { background: var(--pink-200); }
+.btn-danger { background: #ffe0e0; color: #c0392b; }
+.btn-danger:hover { background: #ffc0c0; }
+.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
 
-    /* ---------- Responsive ---------- */
-    @media (max-width: 920px){
-      .shell{grid-template-columns: 1fr}
-      .introWrap{grid-template-columns: 1fr}
-    }
-  </style>
+.task-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.task-item {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: all 0.18s;
+}
+.task-item:hover { border-color: var(--pink-300); }
+.task-item.done { opacity: 0.55; }
+.task-item.done .task-name { text-decoration: line-through; }
+.task-info { flex: 1; min-width: 0; }
+.task-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; }
+.task-meta { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.tag {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem; font-weight: 700;
+  background: var(--pink-100); color: var(--pink-600);
+}
+.tag.high { background: #ffe0e0; color: #c0392b; }
+.tag.med  { background: #fff3e0; color: #e67e22; }
+.tag.low  { background: #e8f5e9; color: #27ae60; }
+
+.filter-bar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.filter-btn {
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.8rem; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.filter-btn.active, .filter-btn:hover { background: var(--pink-500); color: white; border-color: var(--pink-500); }
+
+/* ════════════════════════════════
+   PAGE: CALENDAR
+════════════════════════════════ */
+.cal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+.cal-month {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem; color: var(--text-main);
+}
+.cal-nav { display: flex; gap: 0.5rem; }
+.cal-nav button {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-body);
+  font-size: 1rem; cursor: pointer;
+  transition: all 0.15s;
+}
+.cal-nav button:hover { background: var(--pink-500); color: white; border-color: var(--pink-500); }
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-day-name {
+  text-align: center;
+  font-size: 0.72rem; font-weight: 700;
+  color: var(--text-muted);
+  padding: 0.4rem 0;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.cal-day {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: flex-start;
+  padding: 0.3rem 0.2rem;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.15s;
+  min-height: 52px;
+}
+.cal-day:hover { background: var(--pink-100); border-color: var(--pink-200); }
+.cal-day.today { background: var(--pink-500); color: white; }
+.cal-day.today .day-num { color: white; }
+.cal-day.selected { border-color: var(--pink-400); background: var(--pink-100); }
+.cal-day.other-month { opacity: 0.3; }
+.day-num {
+  font-weight: 700; font-size: 0.85rem;
+  color: var(--text-main);
+}
+.day-dots { display: flex; gap: 2px; margin-top: 2px; flex-wrap: wrap; justify-content: center; }
+.day-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--pink-400); }
+.cal-day.today .day-dot { background: rgba(255,255,255,0.8); }
+
+.cal-layout { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; align-items: start; }
+
+.day-events { }
+.day-events-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.1rem; margin-bottom: 1rem;
+}
+.event-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--surface2);
+  border-left: 3px solid var(--pink-400);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+.event-item .ev-time { font-weight: 700; color: var(--pink-500); min-width: 50px; font-size: 0.8rem; }
+.event-item .ev-name { flex: 1; }
+.event-item .ev-del { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1rem; }
+.event-item .ev-del:hover { color: #c0392b; }
+
+.add-event-form { display: flex; flex-direction: column; gap: 0.6rem; }
+
+/* ════════════════════════════════
+   PAGE: SCHEDULE (Daily Timetable)
+════════════════════════════════ */
+.schedule-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; align-items: start; }
+
+.day-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+.day-tab {
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.82rem; font-weight: 700;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.day-tab.active { background: var(--pink-500); color: white; border-color: var(--pink-500); }
+.day-tab:hover:not(.active) { background: var(--pink-100); }
+
+.time-block {
+  display: flex; gap: 0.9rem; align-items: stretch;
+  margin-bottom: 0.5rem;
+}
+.time-label {
+  font-size: 0.75rem; font-weight: 700; color: var(--text-muted);
+  min-width: 44px; text-align: right;
+  padding-top: 0.7rem;
+}
+.time-slots { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.slot {
+  min-height: 42px; border-radius: var(--radius-sm);
+  border: 1.5px dashed var(--border);
+  display: flex; align-items: center; padding: 0 0.75rem;
+  font-size: 0.82rem; color: var(--text-muted);
+  cursor: pointer; transition: all 0.15s; position: relative;
+}
+.slot:hover { border-color: var(--pink-300); background: var(--pink-100); }
+.slot.filled {
+  border-style: solid; border-color: var(--pink-300);
+  background: var(--pink-100);
+  color: var(--text-main);
+}
+.slot-content { display: flex; align-items: center; gap: 0.5rem; flex: 1; }
+.slot-label { font-weight: 600; flex: 1; }
+.slot-del { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.9rem; opacity: 0; transition: opacity 0.15s; }
+.slot:hover .slot-del { opacity: 1; }
+
+/* ════════════════════════════════
+   PAGE: POMODORO
+════════════════════════════════ */
+.pomo-center {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; min-height: 70vh;
+  gap: 2rem;
+}
+
+.pomo-ring {
+  position: relative; width: 260px; height: 260px;
+}
+.pomo-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.pomo-ring .ring-bg { fill: none; stroke: var(--pink-100); stroke-width: 14; }
+.pomo-ring .ring-fill {
+  fill: none; stroke: var(--pink-500); stroke-width: 14;
+  stroke-linecap: round;
+  stroke-dasharray: 720;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear;
+}
+.pomo-time {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.pomo-time .time-display {
+  font-family: 'DM Serif Display', serif;
+  font-size: 3.5rem; color: var(--text-main);
+  line-height: 1;
+}
+.pomo-time .time-mode {
+  font-size: 0.8rem; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-top: 0.3rem;
+}
+
+.pomo-controls { display: flex; gap: 0.75rem; }
+
+.pomo-modes { display: flex; gap: 0.5rem; }
+.pomo-mode-btn {
+  padding: 0.4rem 1rem; border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: transparent; color: var(--text-muted);
+  font-size: 0.82rem; font-weight: 700; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; transition: all 0.15s;
+}
+.pomo-mode-btn.active { background: var(--pink-500); color: white; border-color: var(--pink-500); }
+
+.pomo-sessions {
+  display: flex; gap: 0.4rem; margin-top: 0.5rem;
+}
+.pomo-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid var(--pink-300);
+  background: transparent; transition: background 0.2s;
+}
+.pomo-dot.done { background: var(--pink-500); border-color: var(--pink-500); }
+
+.pomo-task-label {
+  font-size: 0.9rem; color: var(--text-muted); font-weight: 500;
+  text-align: center; max-width: 300px;
+}
+
+/* MODAL */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(61,26,42,0.35);
+  z-index: 200; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 2rem; width: 360px; max-width: 90vw;
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn 0.25s ease;
+}
+.modal h3 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 1.2rem; }
+.modal .form-group { margin-bottom: 0.75rem; }
+.modal label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.3rem; }
+.modal-footer { display: flex; gap: 0.6rem; justify-content: flex-end; margin-top: 1.2rem; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--pink-200); border-radius: 999px; }
+</style>
 </head>
-
 <body>
-  <!-- INTRO -->
-  <section id="intro" class="screen active">
-    <div class="introWrap">
-      <div class="hero">
-        <div class="kicker mono">[ S Y S T E M ]</div>
-        <h1>Elly’s Skill System 💗</h1>
-        <p class="sub">
-          A cute little task-based leveling tracker.<br />
-          Check off “proof items”, level up your overall rank, and keep our memories + goals in one place.
-        </p>
+<div class="app-shell">
 
-        <div class="row">
-          <button class="btn primary" id="btnEnter">▶ Enter System</button>
-          <button class="btn ghost" id="btnLoadDemo">Load Demo Skills</button>
-          <span class="pill"><span class="dot"></span> Online (love edition)</span>
-        </div>
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar">
+    <div class="logo">My Planner</div>
+    <div class="logo-sub" id="sidebar-date">Loading...</div>
 
-        <div class="hr"></div>
+    <nav>
+      <div class="nav-item active" onclick="nav('dashboard')">
+        <span class="icon">🏠</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="nav('tasks')">
+        <span class="icon">✅</span> Tasks
+      </div>
+      <div class="nav-item" onclick="nav('calendar')">
+        <span class="icon">📅</span> Calendar
+      </div>
+      <div class="nav-item" onclick="nav('schedule')">
+        <span class="icon">🕐</span> Daily Schedule
+      </div>
+      <div class="nav-item" onclick="nav('pomodoro')">
+        <span class="icon">🍅</span> Study Timer
+      </div>
+    </nav>
 
-        <p class="sub muted">
-          Tip: Everything saves automatically in your browser (localStorage).
-          You can rename the player + semester in Settings.
-        </p>
+    <div class="sidebar-bottom">
+      <strong id="pomo-count">0</strong> sessions today<br>
+      <span id="tasks-done-count">0</span> tasks complete
+    </div>
+  </aside>
+
+  <!-- ─── MAIN ─── -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div class="page-title">Good <span id="greeting-time">morning</span> 🌸</div>
+        <div class="page-sub" id="today-full">Today is a great day to be productive</div>
       </div>
 
-      <div class="stamp">
+      <div class="stat-row">
+        <div class="stat-pill">
+          <div class="num" id="dash-tasks-total">0</div>
+          <div class="lbl">Tasks Today</div>
+        </div>
+        <div class="stat-pill">
+          <div class="num" id="dash-tasks-done">0</div>
+          <div class="lbl">Completed</div>
+        </div>
+        <div class="stat-pill">
+          <div class="num" id="dash-pomo">0</div>
+          <div class="lbl">Focus Sessions</div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card">
+          <div class="page-sub" style="font-weight:700;margin-bottom:1rem;">📌 Today's Tasks</div>
+          <ul class="today-tasks-list" id="dash-task-list">
+            <li style="color:var(--text-muted);font-size:0.85rem;">No tasks yet — add some in Tasks!</li>
+          </ul>
+        </div>
+
+        <div class="card quote-card">
+          <div class="q" id="quote-text">"The secret of getting ahead is getting started."</div>
+          <div class="q-author" id="quote-author">— Mark Twain</div>
+        </div>
+
+        <div class="card dash-wide">
+          <div class="page-sub" style="font-weight:700;margin-bottom:1rem;">📅 Upcoming Events</div>
+          <div id="dash-events-list" style="font-size:0.875rem;color:var(--text-muted);">No events yet — add some in Calendar!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASKS -->
+    <div class="page" id="page-tasks">
+      <div class="page-header">
+        <div class="page-title">Tasks <span>& To-Dos</span></div>
+        <div class="page-sub">Stay on top of everything 📌</div>
+      </div>
+
+      <div class="tasks-layout">
         <div>
-          <div class="kicker mono">PERSONAL LEVELING TRACKER</div>
-          <div class="big" id="introSemester">7 Months Anniversary</div>
-          <div class="tiny">Theme: tulips + pink UI • Mode: tasks & proof • Rank: based on completion %</div>
-        </div>
-        <button class="btn primary" id="btnOpenFromStamp">Open 💌</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- APP -->
-  <section id="app" class="screen">
-    <div class="shell">
-      <!-- LEFT / SIDEBAR -->
-      <aside class="card soft">
-        <div class="topbar">
-          <div>
-            <div class="kicker mono">[ S Y S T E M ]</div>
-            <div style="font-weight:1000;color:#381222;margin-top:6px">SKILL SYSTEM</div>
-          </div>
-          <span class="pill"><span class="dot"></span> Active</span>
-        </div>
-
-        <div class="pad">
-          <div class="blockTitle">Player</div>
-          <div class="kv">
-            <div class="k mono">NAME</div>
-            <div class="v" id="playerNameView">Elly</div>
-          </div>
-          <div class="kv">
-            <div class="k mono">SEMESTER</div>
-            <div class="v" id="semesterView">7 Months</div>
-          </div>
-          <div class="kv">
-            <div class="k mono">WEEK</div>
-            <div class="v" id="weekView">1</div>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="row" style="align-items:flex-end">
-            <div>
-              <div class="blockTitle" style="margin:0 0 8px 0">Overall Rank</div>
-              <div style="font-weight:1000;font-size:1.35rem;color:#381222" id="rankView">⬡ 4TH GRADE</div>
-              <div class="muted" style="font-weight:900;margin-top:6px" id="percentView">0% complete</div>
-            </div>
-            <div style="min-width:160px; width: 42%;">
-              <div class="bar"><div class="fill" id="overallFill"></div></div>
+          <div class="card" style="margin-bottom:1.2rem;">
+            <div style="font-weight:700;font-size:0.9rem;margin-bottom:1rem;color:var(--text-body);">Add New Task</div>
+            <div class="add-task-form">
+              <input type="text" id="task-input" placeholder="What do you need to do?">
+              <div class="form-row">
+                <input type="date" id="task-date" style="flex:1">
+                <select id="task-priority" style="flex:1">
+                  <option value="low">🟢 Low</option>
+                  <option value="med" selected>🟡 Medium</option>
+                  <option value="high">🔴 High</option>
+                </select>
+                <select id="task-subject" style="flex:1">
+                  <option value="">📚 Subject</option>
+                  <option value="Maths">Maths</option>
+                  <option value="English">English</option>
+                  <option value="Science">Science</option>
+                  <option value="History">History</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" onclick="addTask()">+ Add Task</button>
             </div>
           </div>
 
-          <div class="hr"></div>
-
-          <div class="blockTitle">Grade Thresholds</div>
-          <div class="gradeList" id="gradeList"></div>
-
-          <div class="hr"></div>
-
-          <div class="blockTitle">Actions</div>
-          <div class="row">
-            <button class="btn ghost small" id="btnSettings">⚙ Settings</button>
-            <button class="btn danger small" id="btnReset">Reset</button>
-          </div>
-        </div>
-      </aside>
-
-      <!-- RIGHT / MAIN -->
-      <main class="card">
-        <div class="topbar">
-          <div>
-            <div class="kicker mono">[ S Y S T E M ]</div>
-            <h1 style="margin:8px 0 0 0">Tasks & Skills</h1>
-            <div class="sub" style="margin-top:8px">
-              Add skills, add proof tasks, tick them off. Your overall rank updates instantly.
+          <div class="card">
+            <div class="filter-bar">
+              <button class="filter-btn active" onclick="filterTasks('all',this)">All</button>
+              <button class="filter-btn" onclick="filterTasks('pending',this)">Pending</button>
+              <button class="filter-btn" onclick="filterTasks('done',this)">Done</button>
+              <button class="filter-btn" onclick="filterTasks('high',this)">🔴 High</button>
             </div>
-          </div>
-
-          <div class="row" style="justify-content:flex-end">
-            <button class="btn ghost" id="btnAddSkill">＋ Add Skill</button>
+            <div class="task-list" id="task-list"></div>
           </div>
         </div>
 
-        <div class="skills" id="skillsRoot"></div>
-
-        <div style="padding: 0 22px 22px;">
-          <div class="card soft" style="border-radius:18px">
-            <div class="pad">
-              <div class="kicker mono">💌 NOTE</div>
-              <div class="sub" style="margin-top:10px">
-                You can use this like a cute “relationship quest log” too:
-                <span class="mono">dates</span>, <span class="mono">memories</span>, <span class="mono">goals</span>, <span class="mono">little wins</span>.
+        <div>
+          <div class="card" style="background:linear-gradient(135deg,var(--pink-100),#fff);">
+            <div style="font-weight:700;font-size:0.9rem;margin-bottom:1rem;color:var(--text-body);">📊 Progress</div>
+            <div style="margin-bottom:1rem;">
+              <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-muted);margin-bottom:0.4rem;">
+                <span>Completed</span><span id="prog-label">0 / 0</span>
+              </div>
+              <div style="height:8px;background:var(--border);border-radius:999px;overflow:hidden;">
+                <div id="prog-bar" style="height:100%;background:var(--pink-500);border-radius:999px;width:0%;transition:width 0.4s;"></div>
               </div>
             </div>
+            <div style="font-size:0.82rem;color:var(--text-muted);" id="task-stats">Keep going! 💪</div>
           </div>
         </div>
-
-      </main>
-    </div>
-  </section>
-
-  <!-- MODAL: ADD SKILL -->
-  <div class="backdrop" id="skillModal">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="skillTitle">
-      <div class="modalHead">
-        <h2 id="skillTitle" class="mono">REGISTER NEW SKILL</h2>
-        <button class="btn link" id="btnCloseSkill">✕</button>
-      </div>
-      <div class="modalBody">
-        <div class="grid">
-          <div class="field">
-            <label>Skill Name</label>
-            <input id="skillName" placeholder="e.g., Date Nights" maxlength="42">
-          </div>
-          <div class="field">
-            <label>Category / Subtitle</label>
-            <input id="skillSub" placeholder="e.g., Quality Time quests" maxlength="56">
-          </div>
-          <div class="field">
-            <label>Icon (emoji)</label>
-            <input id="skillIcon" placeholder="💗" maxlength="3">
-          </div>
-          <div class="field">
-            <label>Start with tasks?</label>
-            <select id="skillPreset">
-              <option value="none">No (empty)</option>
-              <option value="relationship">Relationship Quest Pack</option>
-              <option value="study">Study / Grind Pack</option>
-              <option value="fitness">Active / Fitness Pack</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="field">
-          <label>First task (optional)</label>
-          <input id="skillFirstTask" placeholder="e.g., Plan a cute date idea" maxlength="80">
-        </div>
-      </div>
-      <div class="modalFoot">
-        <button class="btn ghost" id="btnCancelSkill">Cancel</button>
-        <button class="btn primary" id="btnCreateSkill">Confirm</button>
       </div>
     </div>
-  </div>
 
-  <!-- MODAL: SETTINGS -->
-  <div class="backdrop" id="settingsModal">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-      <div class="modalHead">
-        <h2 id="settingsTitle" class="mono">SETTINGS</h2>
-        <button class="btn link" id="btnCloseSettings">✕</button>
+    <!-- CALENDAR -->
+    <div class="page" id="page-calendar">
+      <div class="page-header">
+        <div class="page-title">Calendar <span>& Events</span></div>
+        <div class="page-sub">Plan your month ahead 📅</div>
       </div>
-      <div class="modalBody">
-        <div class="grid">
-          <div class="field">
-            <label>Player Name</label>
-            <input id="setPlayerName" placeholder="Elly" maxlength="30">
+
+      <div class="cal-layout">
+        <div class="card">
+          <div class="cal-header">
+            <div class="cal-month" id="cal-month-label">April 2026</div>
+            <div class="cal-nav">
+              <button onclick="calPrev()">‹</button>
+              <button onclick="calNext()">›</button>
+            </div>
           </div>
-          <div class="field">
-            <label>Semester Name</label>
-            <input id="setSemester" placeholder="7 Months" maxlength="40">
+          <div class="cal-grid" id="cal-grid"></div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:1.2rem;">
+            <div class="day-events-title" id="selected-day-title">Select a day</div>
+            <div id="selected-day-events" style="font-size:0.85rem;color:var(--text-muted);">Click a date to see events.</div>
           </div>
-          <div class="field">
-            <label>Current Week</label>
-            <input id="setWeek" type="number" min="1" max="99">
+          <div class="card">
+            <div style="font-weight:700;font-size:0.9rem;margin-bottom:1rem;color:var(--text-body);">Add Event</div>
+            <div class="add-event-form">
+              <input type="text" id="ev-name" placeholder="Event name">
+              <input type="date" id="ev-date">
+              <input type="text" id="ev-time" placeholder="Time (e.g. 9:00 AM)">
+              <button class="btn btn-primary" onclick="addEvent()">+ Add Event</button>
+            </div>
           </div>
-          <div class="field">
-            <label>Quick Add</label>
-            <select id="setQuickAdd">
-              <option value="none">—</option>
-              <option value="memories">Add “Memories” skill</option>
-              <option value="dates">Add “Dates” skill</option>
-              <option value="letters">Add “Little Letters” skill</option>
-            </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAILY SCHEDULE -->
+    <div class="page" id="page-schedule">
+      <div class="page-header">
+        <div class="page-title">Daily <span>Schedule</span></div>
+        <div class="page-sub">Plan your hours, own your day 🕐</div>
+      </div>
+
+      <div class="schedule-layout">
+        <div class="card">
+          <div class="day-tabs" id="day-tabs">
+            <button class="day-tab active" onclick="selectDay('Mon',this)">Mon</button>
+            <button class="day-tab" onclick="selectDay('Tue',this)">Tue</button>
+            <button class="day-tab" onclick="selectDay('Wed',this)">Wed</button>
+            <button class="day-tab" onclick="selectDay('Thu',this)">Thu</button>
+            <button class="day-tab" onclick="selectDay('Fri',this)">Fri</button>
+            <button class="day-tab" onclick="selectDay('Sat',this)">Sat</button>
+            <button class="day-tab" onclick="selectDay('Sun',this)">Sun</button>
+          </div>
+          <div id="time-grid"></div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div style="font-weight:700;font-size:0.9rem;margin-bottom:1rem;color:var(--text-body);">Add Block</div>
+            <div class="add-task-form">
+              <input type="text" id="slot-label-input" placeholder="e.g. Maths Study">
+              <select id="slot-time-select"></select>
+              <button class="btn btn-primary" onclick="addSlot()">+ Add Block</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POMODORO -->
+    <div class="page" id="page-pomodoro">
+      <div class="page-header">
+        <div class="page-title">Study <span>Timer</span></div>
+        <div class="page-sub">Focus deeply, rest well 🍅</div>
+      </div>
+
+      <div class="pomo-center">
+        <div class="pomo-modes">
+          <button class="pomo-mode-btn active" onclick="setPomoMode('focus',this)">Focus · 25m</button>
+          <button class="pomo-mode-btn" onclick="setPomoMode('short',this)">Short Break · 5m</button>
+          <button class="pomo-mode-btn" onclick="setPomoMode('long',this)">Long Break · 15m</button>
+        </div>
+
+        <div class="pomo-ring">
+          <svg viewBox="0 0 240 240">
+            <circle class="ring-bg" cx="120" cy="120" r="105"/>
+            <circle class="ring-fill" id="pomo-ring" cx="120" cy="120" r="105" stroke-dasharray="659.7" stroke-dashoffset="0"/>
+          </svg>
+          <div class="pomo-time">
+            <div class="time-display" id="pomo-display">25:00</div>
+            <div class="time-mode" id="pomo-mode-label">Focus</div>
           </div>
         </div>
 
-        <div class="hr"></div>
+        <div class="pomo-sessions" id="pomo-dots"></div>
 
-        <div class="sub muted">
-          “Reset” clears everything on this device. If you want a shareable version later, I can convert this to a Firebase / Google sign-in build.
+        <div class="pomo-controls">
+          <button class="btn btn-ghost" onclick="pomoBig('reset')">↺ Reset</button>
+          <button class="btn btn-primary" id="pomo-start-btn" onclick="pomoBig('toggle')">▶ Start</button>
+          <button class="btn btn-ghost" onclick="pomoBig('skip')">Skip ›</button>
         </div>
+
+        <div>
+          <input type="text" id="pomo-task-input" placeholder="What are you working on?" style="max-width:320px;text-align:center;">
+        </div>
+        <div class="pomo-task-label" id="pomo-task-display"></div>
       </div>
-      <div class="modalFoot">
-        <button class="btn ghost" id="btnCancelSettings">Cancel</button>
-        <button class="btn primary" id="btnSaveSettings">Save</button>
-      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- SLOT MODAL -->
+<div class="modal-overlay" id="slot-modal">
+  <div class="modal">
+    <h3>Add Time Block</h3>
+    <div class="form-group">
+      <label>Label</label>
+      <input type="text" id="modal-slot-label" placeholder="e.g. Chemistry Study">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmSlot()">Add</button>
     </div>
   </div>
+</div>
 
-  <script>
-    /* ------------------------------
-      Storage + State
-    ------------------------------ */
-    const LS_KEY = "elly_skill_system_v1";
+<script>
+// ─── STATE ───
+let tasks = JSON.parse(localStorage.getItem('planner_tasks') || '[]');
+let events = JSON.parse(localStorage.getItem('planner_events') || '[]');
+let schedule = JSON.parse(localStorage.getItem('planner_schedule') || '{}');
+let pomoDoneSessions = parseInt(localStorage.getItem('planner_pomo') || '0');
+let taskFilter = 'all';
+let calYear, calMonth, selDay = null, selDayStr = '';
+let currentDay = 'Mon';
+let pendingSlotTime = '';
 
-    const GRADES = [
-      { name: "⬡ 4TH GRADE", min: 0,  max: 39, note: "Below targets — keep pushing" },
-      { name: "3RD GRADE",    min: 40, max: 59, note: "Making progress" },
-      { name: "⬜ 2ND GRADE",  min: 60, max: 74, note: "Solid competence" },
-      { name: "1ST GRADE",    min: 75, max: 89, note: "Meeting & exceeding targets" },
-      { name: "SPECIAL GRADE",min: 90, max: 100,note: "Way beyond all targets" },
-    ];
+// Pomodoro state
+const POMO_TIMES = { focus: 25*60, short: 5*60, long: 15*60 };
+let pomoMode = 'focus';
+let pomoRemaining = POMO_TIMES.focus;
+let pomoRunning = false;
+let pomoInterval = null;
+let pomoPeriod = POMO_TIMES.focus;
 
-    const defaultState = () => ({
-      player: "Elly",
-      semester: "Happy 7 Months 💗",
-      week: 1,
-      skills: [
-        {
-          id: crypto.randomUUID(),
-          name: "Memories",
-          subtitle: "Little proof items we never forget",
-          icon: "📸",
-          tasks: [
-            { id: crypto.randomUUID(), text: "Add 3 favourite photos", done: false },
-            { id: crypto.randomUUID(), text: "Write 1 tiny caption for each", done: false },
-            { id: crypto.randomUUID(), text: "Pick our 'photo of the month'", done: false },
-          ],
-          open: true
-        },
-        {
-          id: crypto.randomUUID(),
-          name: "Quality Time",
-          subtitle: "Date quests + tiny traditions",
-          icon: "💗",
-          tasks: [
-            { id: crypto.randomUUID(), text: "Plan a cute date idea", done: false },
-            { id: crypto.randomUUID(), text: "Do one 'no phones' hour", done: false },
-            { id: crypto.randomUUID(), text: "Send one sweet voice note", done: false },
-          ],
-          open: false
-        }
-      ]
-    });
+// ─── INIT ───
+window.onload = () => {
+  const now = new Date();
+  calYear = now.getFullYear(); calMonth = now.getMonth();
+  selDay = now.getDate();
+  selDayStr = toISO(calYear, calMonth, selDay);
 
-    let state = loadState();
+  updateSidebarDate();
+  updateGreeting();
+  renderDashboard();
+  renderTasks();
+  renderCalendar();
+  renderTimeGrid();
+  fillSlotSelect();
+  renderPomoDots();
+  setInterval(updateSidebarDate, 60000);
+};
 
-    function loadState(){
-      try{
-        const raw = localStorage.getItem(LS_KEY);
-        if(!raw) return defaultState();
-        const parsed = JSON.parse(raw);
-        // minimal guard
-        if(!parsed || !Array.isArray(parsed.skills)) return defaultState();
-        return parsed;
-      }catch(e){
-        return defaultState();
-      }
-    }
-    function saveState(){
-      localStorage.setItem(LS_KEY, JSON.stringify(state));
-    }
+// ─── NAVIGATION ───
+function nav(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (id === 'dashboard') renderDashboard();
+  if (id === 'calendar') renderCalendar();
+  if (id === 'tasks') renderTasks();
+  if (id === 'schedule') renderTimeGrid();
+}
 
-    /* ------------------------------
-      Helpers
-    ------------------------------ */
-    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+// ─── DATE HELPERS ───
+function toISO(y, m, d) {
+  return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
+function todayISO() {
+  const n = new Date(); return toISO(n.getFullYear(), n.getMonth(), n.getDate());
+}
+function updateSidebarDate() {
+  const now = new Date();
+  document.getElementById('sidebar-date').textContent =
+    now.toLocaleDateString('en-AU', { weekday:'long', day:'numeric', month:'short' });
+}
+function updateGreeting() {
+  const h = new Date().getHours();
+  const g = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+  document.getElementById('greeting-time').textContent = g;
+  document.getElementById('today-full').textContent =
+    new Date().toLocaleDateString('en-AU', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+}
 
-    function skillPercent(skill){
-      const total = skill.tasks.length;
-      if(total === 0) return 0;
-      const done = skill.tasks.filter(t => t.done).length;
-      return Math.round((done/total)*100);
-    }
+// ─── DASHBOARD ───
+const quotes = [
+  ['"The secret of getting ahead is getting started."', '— Mark Twain'],
+  ['"Study hard, for the well is deep and our brains are shallow."', '— Richard Baxter'],
+  ['"You don\'t have to be great to start, but you have to start to be great."', '— Zig Ziglar'],
+  ['"Focus on being productive instead of busy."', '— Tim Ferriss'],
+  ['"Push yourself, because no one else is going to do it for you."', '— Unknown'],
+];
+function renderDashboard() {
+  const today = todayISO();
+  const todayTasks = tasks.filter(t => t.date === today || !t.date);
+  const done = todayTasks.filter(t => t.done).length;
+  document.getElementById('dash-tasks-total').textContent = todayTasks.length;
+  document.getElementById('dash-tasks-done').textContent = done;
+  document.getElementById('dash-pomo').textContent = pomoDoneSessions;
+  document.getElementById('pomo-count').textContent = pomoDoneSessions;
+  document.getElementById('tasks-done-count').textContent = tasks.filter(t=>t.done).length;
 
-    function overallPercent(){
-      // overall: total tasks done / total tasks
-      let total = 0, done = 0;
-      for(const s of state.skills){
-        total += s.tasks.length;
-        done  += s.tasks.filter(t => t.done).length;
-      }
-      if(total === 0) return 0;
-      return Math.round((done/total)*100);
-    }
+  const ul = document.getElementById('dash-task-list');
+  if (todayTasks.length === 0) {
+    ul.innerHTML = '<li style="color:var(--text-muted);font-size:0.85rem;">No tasks for today — add some!</li>';
+  } else {
+    ul.innerHTML = todayTasks.slice(0,6).map(t => `
+      <li class="${t.done?'done':''}">
+        <input class="task-cb" type="checkbox" ${t.done?'checked':''} onchange="toggleTask('${t.id}')">
+        <span>${t.name}</span>
+      </li>`).join('');
+  }
 
-    function getGrade(p){
-      for(const g of GRADES){
-        if(p >= g.min && p <= g.max) return g;
-      }
-      return GRADES[0];
-    }
+  const upEv = events.filter(e => e.date >= today).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4);
+  const evDiv = document.getElementById('dash-events-list');
+  if (upEv.length === 0) { evDiv.innerHTML = '<span style="color:var(--text-muted);font-size:0.85rem;">No upcoming events.</span>'; }
+  else {
+    evDiv.innerHTML = upEv.map(e => `
+      <div class="event-item">
+        <span class="ev-time">${e.time||''}</span>
+        <span class="ev-name"><strong>${e.name}</strong> · ${e.date}</span>
+      </div>`).join('');
+  }
 
-    function escapeHtml(str){
-      return String(str).replace(/[&<>"']/g, (m)=>({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-      }[m]));
-    }
+  const q = quotes[Math.floor(Date.now()/86400000) % quotes.length];
+  document.getElementById('quote-text').textContent = q[0];
+  document.getElementById('quote-author').textContent = q[1];
+}
 
-    /* ------------------------------
-      Render
-    ------------------------------ */
-    const $ = (sel) => document.querySelector(sel);
-
-    function renderSidebar(){
-      $("#playerNameView").textContent = state.player || "PLAYER";
-      $("#semesterView").textContent = state.semester || "—";
-      $("#weekView").textContent = state.week ?? "—";
-
-      const p = overallPercent();
-      const grade = getGrade(p);
-
-      $("#rankView").textContent = grade.name;
-      $("#percentView").textContent = `${p}% complete`;
-      $("#overallFill").style.width = `${p}%`;
-
-      // grade list
-      const root = $("#gradeList");
-      root.innerHTML = "";
-      for(const g of GRADES){
-        const item = document.createElement("div");
-        item.className = "gradeItem" + (g.name === grade.name ? " activeGrade" : "");
-        item.innerHTML = `
-          <div>
-            <strong class="mono">${escapeHtml(g.name)}</strong>
-            <div style="margin-top:4px;color:rgba(42,16,32,.62);font-weight:900;font-size:.9rem">
-              ${g.min}–${g.max}%
-            </div>
+// ─── TASKS ───
+function save() {
+  localStorage.setItem('planner_tasks', JSON.stringify(tasks));
+  localStorage.setItem('planner_events', JSON.stringify(events));
+  localStorage.setItem('planner_schedule', JSON.stringify(schedule));
+}
+function addTask() {
+  const name = document.getElementById('task-input').value.trim();
+  if (!name) return;
+  tasks.push({
+    id: Date.now().toString(),
+    name,
+    date: document.getElementById('task-date').value || todayISO(),
+    priority: document.getElementById('task-priority').value,
+    subject: document.getElementById('task-subject').value,
+    done: false
+  });
+  document.getElementById('task-input').value = '';
+  save(); renderTasks();
+}
+function toggleTask(id) {
+  const t = tasks.find(t => t.id === id);
+  if (t) { t.done = !t.done; save(); renderTasks(); renderDashboard(); }
+}
+function deleteTask(id) {
+  tasks = tasks.filter(t => t.id !== id); save(); renderTasks();
+}
+function filterTasks(f, btn) {
+  taskFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTasks();
+}
+function renderTasks() {
+  let filtered = [...tasks];
+  if (taskFilter === 'pending') filtered = filtered.filter(t => !t.done);
+  if (taskFilter === 'done') filtered = filtered.filter(t => t.done);
+  if (taskFilter === 'high') filtered = filtered.filter(t => t.priority === 'high');
+  filtered.sort((a,b) => {
+    const po = {high:0,med:1,low:2};
+    return (po[a.priority]||1) - (po[b.priority]||1);
+  });
+  const list = document.getElementById('task-list');
+  if (filtered.length === 0) {
+    list.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;padding:1rem 0;text-align:center;">No tasks here yet 🌸</div>';
+  } else {
+    list.innerHTML = filtered.map(t => `
+      <div class="task-item ${t.done?'done':''}">
+        <input class="task-cb" type="checkbox" ${t.done?'checked':''} onchange="toggleTask('${t.id}')">
+        <div class="task-info">
+          <div class="task-name">${t.name}</div>
+          <div class="task-meta">
+            ${t.date?`<span>📅 ${t.date}</span>`:''}
+            ${t.subject?`<span>📚 ${t.subject}</span>`:''}
+            <span class="tag ${t.priority}">${t.priority==='high'?'🔴 High':t.priority==='med'?'🟡 Med':'🟢 Low'}</span>
           </div>
-          <span>${escapeHtml(g.note)}</span>
-        `;
-        root.appendChild(item);
-      }
-    }
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="deleteTask('${t.id}')">✕</button>
+      </div>`).join('');
+  }
+  const done = tasks.filter(t=>t.done).length;
+  const pct = tasks.length ? Math.round(done/tasks.length*100) : 0;
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = `${done} / ${tasks.length}`;
+  document.getElementById('task-stats').textContent =
+    pct === 100 ? '🎉 All done! Amazing work!' : pct > 50 ? '💪 More than halfway there!' : 'Keep going, you got this! 🌸';
+  document.getElementById('tasks-done-count').textContent = done;
+}
 
-    function renderSkills(){
-      const root = $("#skillsRoot");
-      root.innerHTML = "";
+// ─── CALENDAR ───
+function calPrev() { calMonth--; if (calMonth < 0) { calMonth=11; calYear--; } renderCalendar(); }
+function calNext() { calMonth++; if (calMonth > 11) { calMonth=0; calYear++; } renderCalendar(); }
+function renderCalendar() {
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent = `${months[calMonth]} ${calYear}`;
+  const grid = document.getElementById('cal-grid');
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const today = todayISO();
+  let html = days.map(d=>`<div class="cal-day-name">${d}</div>`).join('');
+  const first = new Date(calYear, calMonth, 1).getDay();
+  const daysIn = new Date(calYear, calMonth+1, 0).getDate();
+  const prevDays = new Date(calYear, calMonth, 0).getDate();
+  for (let i=0; i<first; i++) {
+    const d = prevDays - first + 1 + i;
+    html += `<div class="cal-day other-month"><div class="day-num">${d}</div></div>`;
+  }
+  for (let d=1; d<=daysIn; d++) {
+    const iso = toISO(calYear, calMonth, d);
+    const isToday = iso === today;
+    const isSel = iso === selDayStr;
+    const dayEvs = events.filter(e => e.date === iso);
+    const dayTasks = tasks.filter(t => t.date === iso);
+    const dots = [...dayEvs.slice(0,3), ...dayTasks.slice(0,3-dayEvs.length)];
+    html += `<div class="cal-day ${isToday?'today':''} ${isSel&&!isToday?'selected':''}"
+               onclick="selectCalDay(${calYear},${calMonth},${d})">
+               <div class="day-num">${d}</div>
+               <div class="day-dots">${dots.map(()=>`<div class="day-dot"></div>`).join('')}</div>
+             </div>`;
+  }
+  const remaining = 42 - first - daysIn;
+  for (let d=1; d<=remaining; d++) html += `<div class="cal-day other-month"><div class="day-num">${d}</div></div>`;
+  grid.innerHTML = html;
+  renderDayEvents();
+}
+function selectCalDay(y, m, d) {
+  selDay = d; selDayStr = toISO(y, m, d);
+  renderCalendar();
+}
+function renderDayEvents() {
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const d = new Date(calYear, calMonth, selDay);
+  document.getElementById('selected-day-title').textContent =
+    `${d.toLocaleDateString('en-AU',{weekday:'long'})} · ${selDay} ${months[calMonth]}`;
+  const dayEvs = events.filter(e => e.date === selDayStr);
+  const dayTasks = tasks.filter(t => t.date === selDayStr);
+  let html = '';
+  dayEvs.forEach(e => {
+    html += `<div class="event-item">
+      <span class="ev-time">${e.time||'📅'}</span>
+      <span class="ev-name">${e.name}</span>
+      <button class="ev-del" onclick="deleteEvent('${e.id}')">✕</button>
+    </div>`;
+  });
+  dayTasks.forEach(t => {
+    html += `<div class="event-item" style="border-left-color:var(--pink-300)">
+      <span class="ev-time">✅</span>
+      <span class="ev-name">${t.name}</span>
+    </div>`;
+  });
+  document.getElementById('selected-day-events').innerHTML =
+    html || '<span style="color:var(--text-muted);font-size:0.85rem;">Nothing planned — enjoy the free time! 🌸</span>';
+  document.getElementById('ev-date').value = selDayStr;
+}
+function addEvent() {
+  const name = document.getElementById('ev-name').value.trim();
+  if (!name) return;
+  events.push({
+    id: Date.now().toString(),
+    name,
+    date: document.getElementById('ev-date').value || selDayStr,
+    time: document.getElementById('ev-time').value
+  });
+  document.getElementById('ev-name').value = '';
+  document.getElementById('ev-time').value = '';
+  save(); renderCalendar();
+}
+function deleteEvent(id) {
+  events = events.filter(e => e.id !== id); save(); renderCalendar();
+}
 
-      if(state.skills.length === 0){
-        const empty = document.createElement("div");
-        empty.className = "card soft";
-        empty.style.borderRadius = "18px";
-        empty.innerHTML = `
-          <div class="pad">
-            <div class="kicker mono">NO SKILLS YET</div>
-            <div class="sub" style="margin-top:10px">
-              Add your first skill to start leveling up ✨
-            </div>
-            <div style="margin-top:14px">
-              <button class="btn primary" id="emptyAdd">＋ Add Skill</button>
-            </div>
-          </div>
-        `;
-        root.appendChild(empty);
-        setTimeout(()=> {
-          const b = $("#emptyAdd");
-          if(b) b.onclick = openSkillModal;
-        }, 0);
-        return;
-      }
+// ─── SCHEDULE ───
+const HOURS = [
+  '6:00 AM','7:00 AM','8:00 AM','9:00 AM','10:00 AM','11:00 AM',
+  '12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM',
+  '6:00 PM','7:00 PM','8:00 PM','9:00 PM','10:00 PM'
+];
+function fillSlotSelect() {
+  document.getElementById('slot-time-select').innerHTML =
+    HOURS.map(h => `<option value="${h}">${h}</option>`).join('');
+}
+function selectDay(d, btn) {
+  currentDay = d;
+  document.querySelectorAll('.day-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTimeGrid();
+}
+function renderTimeGrid() {
+  if (!schedule[currentDay]) schedule[currentDay] = {};
+  const grid = document.getElementById('time-grid');
+  grid.innerHTML = HOURS.map(h => {
+    const slot = schedule[currentDay][h];
+    return `<div class="time-block">
+      <div class="time-label">${h}</div>
+      <div class="time-slots">
+        <div class="slot ${slot?'filled':''}" onclick="clickSlot('${h}')">
+          ${slot ? `<div class="slot-content">
+            <span class="slot-label">${slot}</span>
+            <button class="slot-del" onclick="event.stopPropagation();clearSlot('${h}')">✕</button>
+          </div>` : `<span style="opacity:0.4">+ add block</span>`}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function clickSlot(time) {
+  pendingSlotTime = time;
+  document.getElementById('modal-slot-label').value = '';
+  document.getElementById('slot-modal').classList.add('open');
+  setTimeout(() => document.getElementById('modal-slot-label').focus(), 100);
+}
+function confirmSlot() {
+  const label = document.getElementById('modal-slot-label').value.trim();
+  if (!label) return;
+  if (!schedule[currentDay]) schedule[currentDay] = {};
+  schedule[currentDay][pendingSlotTime] = label;
+  save(); closeModal(); renderTimeGrid();
+}
+function clearSlot(time) {
+  delete schedule[currentDay][time]; save(); renderTimeGrid();
+}
+function addSlot() {
+  const label = document.getElementById('slot-label-input').value.trim();
+  const time = document.getElementById('slot-time-select').value;
+  if (!label) return;
+  if (!schedule[currentDay]) schedule[currentDay] = {};
+  schedule[currentDay][time] = label;
+  document.getElementById('slot-label-input').value = '';
+  save(); renderTimeGrid();
+}
+function closeModal() { document.getElementById('slot-modal').classList.remove('open'); }
+document.getElementById('slot-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
 
-      state.skills.forEach((skill, idx) => {
-        const p = skillPercent(skill);
-
-        const wrap = document.createElement("div");
-        wrap.className = "skill" + (skill.open ? " open" : "");
-        wrap.innerHTML = `
-          <div class="skillHead" data-skill="${skill.id}">
-            <div class="skillLeft">
-              <div class="icon" aria-hidden="true">${escapeHtml(skill.icon || "💗")}</div>
-              <div class="skillMeta">
-                <div class="skillName">${escapeHtml(skill.name)}</div>
-                <div class="skillSub">${escapeHtml(skill.subtitle || "—")}</div>
-              </div>
-            </div>
-            <div class="skillRight">
-              <span class="pill mono">${p}%</span>
-              <div class="chev">⌄</div>
-            </div>
-          </div>
-
-          <div class="skillBody">
-            <div class="row">
-              <div style="flex:1; min-width:200px">
-                <div class="bar"><div class="fill" style="width:${p}%"></div></div>
-                <div class="muted" style="margin-top:8px;font-weight:900">
-                  ${skill.tasks.filter(t=>t.done).length} / ${skill.tasks.length} tasks complete
-                </div>
-              </div>
-
-              <div class="row" style="justify-content:flex-end">
-                <button class="btn ghost small" data-addtask="${skill.id}">＋ Add Task</button>
-                <button class="btn ghost small" data-delSkill="${skill.id}">Delete</button>
-              </div>
-            </div>
-
-            <div class="tasks">
-              ${skill.tasks.map(t => `
-                <div class="task ${t.done ? "done" : ""}" data-task="${t.id}" data-skill="${skill.id}">
-                  <input type="checkbox" ${t.done ? "checked" : ""} aria-label="Complete task">
-                  <div class="taskText">${escapeHtml(t.text)}</div>
-                  <div class="taskActions">
-                    <button class="x" title="Delete task" data-delTask="${skill.id}::${t.id}">✕</button>
-                  </div>
-                </div>
-              `).join("")}
-            </div>
-
-            ${skill.tasks.length === 0 ? `
-              <div class="sub muted" style="margin-top:12px">
-                No tasks yet — add your first proof item ✨
-              </div>
-            ` : ``}
-          </div>
-        `;
-
-        root.appendChild(wrap);
-      });
-
-      // handlers
-      root.querySelectorAll(".skillHead").forEach(el => {
-        el.addEventListener("click", () => {
-          const id = el.getAttribute("data-skill");
-          const s = state.skills.find(x => x.id === id);
-          if(!s) return;
-          s.open = !s.open;
-          saveState();
-          rerender();
-        });
-      });
-
-      root.querySelectorAll("[data-addtask]").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const id = btn.getAttribute("data-addtask");
-          addTaskFlow(id);
-        });
-      });
-
-      root.querySelectorAll("[data-delSkill]").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const id = btn.getAttribute("data-delSkill");
-          if(confirm("Delete this skill and all its tasks?")){
-            state.skills = state.skills.filter(s => s.id !== id);
-            saveState();
-            rerender();
+// ─── POMODORO ───
+const CIRC = 659.7;
+function renderPomoDots() {
+  const d = document.getElementById('pomo-dots');
+  d.innerHTML = Array.from({length:4}, (_,i) =>
+    `<div class="pomo-dot ${i<(pomoDoneSessions%4)?'done':''}"></div>`).join('');
+}
+function setPomoMode(mode, btn) {
+  if (pomoRunning) return;
+  pomoMode = mode;
+  document.querySelectorAll('.pomo-mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  pomoPeriod = POMO_TIMES[mode];
+  pomoRemaining = pomoPeriod;
+  const labels = {focus:'Focus',short:'Short Break',long:'Long Break'};
+  document.getElementById('pomo-mode-label').textContent = labels[mode];
+  updatePomoDisplay();
+}
+function updatePomoDisplay() {
+  const m = Math.floor(pomoRemaining/60);
+  const s = pomoRemaining % 60;
+  document.getElementById('pomo-display').textContent =
+    `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const pct = 1 - (pomoRemaining / pomoPeriod);
+  document.getElementById('pomo-ring').style.strokeDashoffset = (CIRC * (1-pct));
+}
+function pomoBig(action) {
+  if (action === 'toggle') {
+    if (pomoRunning) {
+      clearInterval(pomoInterval); pomoRunning = false;
+      document.getElementById('pomo-start-btn').textContent = '▶ Start';
+    } else {
+      pomoRunning = true;
+      document.getElementById('pomo-start-btn').textContent = '⏸ Pause';
+      pomoInterval = setInterval(() => {
+        if (pomoRemaining <= 0) {
+          clearInterval(pomoInterval); pomoRunning = false;
+          document.getElementById('pomo-start-btn').textContent = '▶ Start';
+          if (pomoMode === 'focus') {
+            pomoDoneSessions++;
+            localStorage.setItem('planner_pomo', pomoDoneSessions);
+            renderPomoDots(); renderDashboard();
           }
-        });
-      });
-
-      root.querySelectorAll("[data-delTask]").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const [skillId, taskId] = btn.getAttribute("data-delTask").split("::");
-          const s = state.skills.find(x => x.id === skillId);
-          if(!s) return;
-          s.tasks = s.tasks.filter(t => t.id !== taskId);
-          saveState();
-          rerender();
-        });
-      });
-
-      root.querySelectorAll(".task input[type='checkbox']").forEach(chk => {
-        chk.addEventListener("change", (e) => {
-          const wrap = chk.closest(".task");
-          const skillId = wrap.getAttribute("data-skill");
-          const taskId = wrap.getAttribute("data-task");
-          const s = state.skills.find(x => x.id === skillId);
-          if(!s) return;
-          const t = s.tasks.find(x => x.id === taskId);
-          if(!t) return;
-          t.done = chk.checked;
-          saveState();
-          rerender(false); // keep open states
-        });
-      });
-    }
-
-    function rerender(scrollTop=true){
-      renderSidebar();
-      renderSkills();
-      if(scrollTop) window.scrollTo({top:0, behavior:"smooth"});
-    }
-
-    /* ------------------------------
-      Flows
-    ------------------------------ */
-    function addTaskFlow(skillId){
-      const text = prompt("Add a new task / proof item:");
-      if(!text) return;
-      const s = state.skills.find(x => x.id === skillId);
-      if(!s) return;
-      s.tasks.push({ id: crypto.randomUUID(), text: text.trim().slice(0,80), done:false });
-      s.open = true;
-      saveState();
-      rerender(false);
-    }
-
-    function createSkill({name, subtitle, icon, preset, firstTask}){
-      const tasks = [];
-
-      if(preset === "relationship"){
-        tasks.push(
-          {id: crypto.randomUUID(), text:"Plan a date idea (simple + cute)", done:false},
-          {id: crypto.randomUUID(), text:"Do one 'tiny tradition' together", done:false},
-          {id: crypto.randomUUID(), text:"Write a 5-line appreciation note", done:false}
-        );
-      }else if(preset === "study"){
-        tasks.push(
-          {id: crypto.randomUUID(), text:"45-min focused session (no distractions)", done:false},
-          {id: crypto.randomUUID(), text:"Make 10 flashcards or 1-page summary", done:false},
-          {id: crypto.randomUUID(), text:"Do 10 practice questions", done:false}
-        );
-      }else if(preset === "fitness"){
-        tasks.push(
-          {id: crypto.randomUUID(), text:"30–45 min active session", done:false},
-          {id: crypto.randomUUID(), text:"Stretch 10 minutes", done:false},
-          {id: crypto.randomUUID(), text:"Hydrate + 7k steps", done:false}
-        );
-      }
-
-      if(firstTask && firstTask.trim()){
-        tasks.unshift({id: crypto.randomUUID(), text:firstTask.trim().slice(0,80), done:false});
-      }
-
-      state.skills.unshift({
-        id: crypto.randomUUID(),
-        name: name.trim().slice(0,42) || "New Skill",
-        subtitle: (subtitle || "").trim().slice(0,56) || "—",
-        icon: (icon || "💗").trim().slice(0,3) || "💗",
-        tasks,
-        open:true
-      });
-
-      saveState();
-      rerender();
-    }
-
-    /* ------------------------------
-      Modals
-    ------------------------------ */
-    const skillModal = $("#skillModal");
-    const settingsModal = $("#settingsModal");
-
-    function openSkillModal(){
-      $("#skillName").value = "";
-      $("#skillSub").value = "";
-      $("#skillIcon").value = "💗";
-      $("#skillPreset").value = "relationship";
-      $("#skillFirstTask").value = "";
-      skillModal.classList.add("show");
-      $("#skillName").focus();
-    }
-    function closeSkillModal(){ skillModal.classList.remove("show"); }
-
-    function openSettings(){
-      $("#setPlayerName").value = state.player || "";
-      $("#setSemester").value = state.semester || "";
-      $("#setWeek").value = state.week || 1;
-      $("#setQuickAdd").value = "none";
-      settingsModal.classList.add("show");
-      $("#setPlayerName").focus();
-    }
-    function closeSettings(){ settingsModal.classList.remove("show"); }
-
-    /* ------------------------------
-      Screen switching
-    ------------------------------ */
-    function enterApp(){
-      $("#intro").classList.remove("active");
-      $("#app").classList.add("active");
-      rerender();
-    }
-
-    /* ------------------------------
-      Wiring
-    ------------------------------ */
-    $("#btnEnter").onclick = enterApp;
-    $("#btnOpenFromStamp").onclick = enterApp;
-
-    $("#btnAddSkill").onclick = openSkillModal;
-    $("#btnCloseSkill").onclick = closeSkillModal;
-    $("#btnCancelSkill").onclick = closeSkillModal;
-    skillModal.addEventListener("click", (e)=>{ if(e.target === skillModal) closeSkillModal(); });
-
-    $("#btnCreateSkill").onclick = () => {
-      createSkill({
-        name: $("#skillName").value,
-        subtitle: $("#skillSub").value,
-        icon: $("#skillIcon").value,
-        preset: $("#skillPreset").value,
-        firstTask: $("#skillFirstTask").value
-      });
-      closeSkillModal();
-    };
-
-    $("#btnSettings").onclick = openSettings;
-    $("#btnCloseSettings").onclick = closeSettings;
-    $("#btnCancelSettings").onclick = closeSettings;
-    settingsModal.addEventListener("click", (e)=>{ if(e.target === settingsModal) closeSettings(); });
-
-    $("#btnSaveSettings").onclick = () => {
-      state.player = ($("#setPlayerName").value || "PLAYER").trim().slice(0,30);
-      state.semester = ($("#setSemester").value || "—").trim().slice(0,40);
-      const w = parseInt($("#setWeek").value, 10);
-      state.week = clamp(isNaN(w) ? 1 : w, 1, 99);
-
-      const qa = $("#setQuickAdd").value;
-      if(qa !== "none"){
-        const map = {
-          memories: {name:"Memories", subtitle:"Photos + captions + moments", icon:"📸", preset:"none"},
-          dates:    {name:"Dates", subtitle:"Plans, ideas, little adventures", icon:"🌷", preset:"relationship"},
-          letters:  {name:"Little Letters", subtitle:"Notes, voice notes, sweet things", icon:"💌", preset:"relationship"},
-        };
-        const s = map[qa];
-        if(s){
-          createSkill({name:s.name, subtitle:s.subtitle, icon:s.icon, preset:s.preset, firstTask:""});
+          pomoRemaining = pomoPeriod;
+          updatePomoDisplay();
+          return;
         }
-      }
-
-      saveState();
-      rerender(false);
-      closeSettings();
-    };
-
-    $("#btnReset").onclick = () => {
-      if(confirm("Reset ALL data on this device? This cannot be undone.")){
-        localStorage.removeItem(LS_KEY);
-        state = defaultState();
-        saveState();
-        rerender();
-        // go back to intro for the cute effect
-        $("#app").classList.remove("active");
-        $("#intro").classList.add("active");
-      }
-    };
-
-    $("#btnLoadDemo").onclick = () => {
-      state = defaultState();
-      // add a couple more demo skills (cute vibe)
-      state.skills.push({
-        id: crypto.randomUUID(),
-        name: "Communication",
-        subtitle: "Soft words, honest talks",
-        icon: "🫶",
-        tasks: [
-          {id: crypto.randomUUID(), text:"Ask: 'How are you really?'", done:false},
-          {id: crypto.randomUUID(), text:"Share one thing you’re grateful for", done:false},
-          {id: crypto.randomUUID(), text:"One calm check-in call", done:false}
-        ],
-        open:false
-      });
-      state.skills.push({
-        id: crypto.randomUUID(),
-        name: "Future Plans",
-        subtitle: "Tiny steps, big dreams",
-        icon: "✨",
-        tasks: [
-          {id: crypto.randomUUID(), text:"Make a mini bucket list (5 items)", done:false},
-          {id: crypto.randomUUID(), text:"Pick 1 thing to do this month", done:false}
-        ],
-        open:false
-      });
-
-      saveState();
-      $("#introSemester").textContent = state.semester;
-      alert("Demo loaded 💗 Click Enter System.");
-    };
-
-    // init intro label from state
-    $("#introSemester").textContent = state.semester;
-
-    // initial sidebar/skills render only once you enter app
-  </script>
+        pomoRemaining--; updatePomoDisplay();
+      }, 1000);
+    }
+  } else if (action === 'reset') {
+    clearInterval(pomoInterval); pomoRunning = false;
+    document.getElementById('pomo-start-btn').textContent = '▶ Start';
+    pomoRemaining = pomoPeriod; updatePomoDisplay();
+  } else if (action === 'skip') {
+    clearInterval(pomoInterval); pomoRunning = false;
+    document.getElementById('pomo-start-btn').textContent = '▶ Start';
+    pomoRemaining = 0; updatePomoDisplay();
+  }
+}
+document.getElementById('pomo-task-input').addEventListener('input', function() {
+  document.getElementById('pomo-task-display').textContent = this.value ? '📚 ' + this.value : '';
+});
+updatePomoDisplay();
+</script>
 </body>
 </html>
