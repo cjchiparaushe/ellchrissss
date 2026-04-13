@@ -7,583 +7,632 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f5f0e8;
-  --paper: #faf7f2;
-  --paper2: #f0ebe0;
-  --ink: #2c2416;
-  --ink-muted: #7a6a52;
-  --ink-light: #b0a08a;
-  --accent: #c8a96e;
-  --star: #d4a843;
-  --f1: #a8c4d0; /* Social - dusty blue */
-  --f2: #b8cca8; /* Academic - sage */
-  --f3: #ccc0a0; /* Work - warm sand */
-  --f4: #bcaec8; /* Gym - dusty mauve */
-  --f5: #c8b0b0; /* Health - dusty rose */
-  --f6: #a8c0b8; /* Hobbies - muted teal */
-  --active: #a8c4d0;
+  --bg:#f5f0e8; --paper:#faf7f2; --paper2:#f0ebe0;
+  --ink:#2c2416; --ink-muted:#7a6a52; --ink-light:#b0a08a;
+  --accent:#c8a96e; --star:#d4a843;
+  --f1:#a8c4d0; --f2:#b8cca8; --f3:#ccc0a0;
+  --f4:#bcaec8; --f5:#c8b0b0; --f6:#a8c0b8;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: #271c10;
-  min-height: 100vh;
-  display: flex; flex-direction: column; align-items: center;
-  padding: 2.5rem 1rem 5rem;
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:#271c10; min-height:100vh;
+  display:flex; flex-direction:column; align-items:center;
+  padding:2.5rem 1rem 5rem;
 }
-/* grain */
-body::after {
-  content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-  opacity: 0.4;
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  opacity:0.4;
 }
+
+/* ── LOGIN SCREEN ── */
+#login-screen{
+  position:fixed;inset:0;z-index:500;
+  background:#271c10;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2rem;
+}
+#login-screen.hidden{display:none;}
+.login-logo{font-family:'Playfair Display',serif;font-style:italic;font-size:3rem;color:#faf7f2;}
+.login-logo em{color:var(--accent);}
+.login-sub{font-size:0.9rem;color:var(--ink-light);letter-spacing:0.05em;}
+.google-btn{
+  display:flex;align-items:center;gap:0.75rem;
+  background:#faf7f2;border:none;border-radius:8px;
+  padding:0.8rem 1.8rem;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:700;
+  color:var(--ink);transition:all 0.2s;box-shadow:0 4px 20px rgba(0,0,0,0.3);
+}
+.google-btn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(0,0,0,0.4);}
+.google-btn svg{width:20px;height:20px;}
+.login-note{font-size:0.72rem;color:var(--ink-light);max-width:260px;text-align:center;line-height:1.6;}
+
+/* sync indicator */
+.sync-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:#aaa;display:inline-block;margin-right:5px;
+  transition:background 0.3s;
+}
+.sync-dot.synced{background:#7bc47b;}
+.sync-dot.syncing{background:var(--accent);animation:pulse 0.8s infinite;}
+.sync-dot.error{background:#e07070;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.sync-label{font-size:0.65rem;color:var(--ink-light);display:flex;align-items:center;}
 
 /* ── TOP ── */
-.top-bar {
-  width:100%; max-width:900px;
-  display:flex; align-items:center; justify-content:space-between;
-  margin-bottom:2.5rem; padding:0 4px;
+.top-bar{width:100%;max-width:900px;display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;padding:0 4px;}
+.logo{font-family:'Playfair Display',serif;font-style:italic;font-size:2.1rem;color:#faf7f2;letter-spacing:-0.02em;}
+.logo em{color:var(--accent);font-style:italic;}
+.top-right{display:flex;align-items:center;gap:1rem;}
+.date-chip{background:rgba(250,247,242,0.1);border:1px solid rgba(250,247,242,0.18);border-radius:999px;padding:0.4rem 1.1rem;font-size:0.72rem;color:#faf7f2;letter-spacing:0.1em;text-transform:uppercase;}
+.user-pill{
+  display:flex;align-items:center;gap:0.6rem;
+  background:rgba(250,247,242,0.1);border:1px solid rgba(250,247,242,0.18);
+  border-radius:999px;padding:0.3rem 0.9rem 0.3rem 0.4rem;
+  cursor:pointer;transition:background 0.2s;
 }
-.logo {
-  font-family:'Playfair Display',serif; font-style:italic;
-  font-size:2.1rem; color:#faf7f2; letter-spacing:-0.02em;
-}
-.logo em { color:var(--accent); font-style:italic; }
-.date-chip {
-  background:rgba(250,247,242,0.1); border:1px solid rgba(250,247,242,0.18);
-  border-radius:999px; padding:0.4rem 1.1rem;
-  font-size:0.72rem; color:#faf7f2; letter-spacing:0.1em; text-transform:uppercase;
-}
+.user-pill:hover{background:rgba(250,247,242,0.18);}
+.user-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;border:1.5px solid var(--accent);}
+.user-avatar-placeholder{width:26px;height:26px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;}
+.user-name{font-size:0.72rem;color:#faf7f2;font-weight:600;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
 /* ── FOLDER TABS ── */
-.folder-tabs {
-  width:100%; max-width:900px;
-  display:flex; position:relative; z-index:10;
+.folder-tabs{width:100%;max-width:900px;display:flex;position:relative;z-index:10;}
+.ftab{
+  flex:1;padding:0.7rem 0.4rem 1rem;text-align:center;cursor:pointer;
+  border-radius:12px 12px 0 0;font-size:0.68rem;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--ink);opacity:0.68;
+  transition:all 0.2s;position:relative;
+  border:1.5px solid rgba(0,0,0,0.06);border-bottom:none;
+  margin-right:4px;user-select:none;
 }
-.ftab {
-  flex:1; padding:0.7rem 0.4rem 1rem;
-  text-align:center; cursor:pointer;
-  border-radius:12px 12px 0 0;
-  font-size:0.68rem; font-weight:700;
-  letter-spacing:0.12em; text-transform:uppercase;
-  color:var(--ink); opacity:0.68;
-  transition:all 0.2s; position:relative;
-  border:1.5px solid rgba(0,0,0,0.06); border-bottom:none;
-  margin-right:4px; user-select:none;
-}
-.ftab:last-child { margin-right:0; }
-.ftab[data-f="1"] { background:var(--f1); }
-.ftab[data-f="2"] { background:var(--f2); }
-.ftab[data-f="3"] { background:var(--f3); }
-.ftab[data-f="4"] { background:var(--f4); }
-.ftab[data-f="5"] { background:var(--f5); }
-.ftab[data-f="6"] { background:var(--f6); }
-.ftab.active { opacity:1; transform:translateY(3px); z-index:5; box-shadow:0 -2px 8px rgba(0,0,0,0.1); }
-.ftab:hover:not(.active) { opacity:0.88; }
+.ftab:last-child{margin-right:0;}
+.ftab[data-f="1"]{background:var(--f1);}
+.ftab[data-f="2"]{background:var(--f2);}
+.ftab[data-f="3"]{background:var(--f3);}
+.ftab[data-f="4"]{background:var(--f4);}
+.ftab[data-f="5"]{background:var(--f5);}
+.ftab[data-f="6"]{background:var(--f6);}
+.ftab.active{opacity:1;transform:translateY(3px);z-index:5;box-shadow:0 -2px 8px rgba(0,0,0,0.1);}
+.ftab:hover:not(.active){opacity:0.88;}
 
 /* ── FOLDER BODY ── */
-.folder-body {
-  width:100%; max-width:900px;
-  background:var(--paper);
-  border-radius:0 0 20px 20px;
-  position:relative; overflow:hidden;
-  box-shadow:0 24px 70px rgba(0,0,0,0.45), 0 6px 20px rgba(0,0,0,0.25);
+.folder-body{
+  width:100%;max-width:900px;background:var(--paper);
+  border-radius:0 0 20px 20px;position:relative;overflow:hidden;
+  box-shadow:0 24px 70px rgba(0,0,0,0.45),0 6px 20px rgba(0,0,0,0.25);
   min-height:600px;
 }
-
-/* Color strip */
-#strip {
-  height:7px; width:100%;
-  background:var(--f1); transition:background 0.3s;
-  position:relative; z-index:2;
-}
-
-/* Ruled lines texture */
-.folder-body::after {
-  content:''; position:absolute; inset:0; pointer-events:none;
+#strip{height:7px;width:100%;background:var(--f1);transition:background 0.3s;position:relative;z-index:2;}
+.folder-body::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(transparent,transparent 27px,rgba(44,36,22,0.04) 27px,rgba(44,36,22,0.04) 28px);
 }
+.deco-clip{position:absolute;top:-10px;right:52px;z-index:20;width:32px;}
+.clip-top{width:32px;height:38px;background:#3a3025;border:2.5px solid #1a1208;border-radius:5px 5px 0 0;position:relative;}
+.clip-top::before{content:'';position:absolute;top:6px;left:5px;right:5px;height:12px;border:2px solid #555;border-radius:2px;}
+.clip-bot{width:22px;height:22px;margin:0 auto;border:2.5px solid #1a1208;border-radius:0 0 11px 11px;border-top:none;background:transparent;}
+.deco-pen{position:absolute;top:10px;right:16px;z-index:20;width:10px;height:90px;background:linear-gradient(#d0e8f0,#b0ccd8);border-radius:5px 5px 2px 2px;border:1px solid rgba(0,0,0,0.15);transform:rotate(4deg);}
+.deco-pen::after{content:'';position:absolute;bottom:-8px;left:2px;width:6px;height:10px;background:#888;border-radius:0 0 3px 3px;clip-path:polygon(0 0,100% 0,50% 100%);}
+.folder-sticker{position:absolute;bottom:32px;left:36px;z-index:10;background:#f8f4ee;border:1px solid var(--ink-light);border-radius:6px;padding:0.6rem 1rem 0.7rem;max-width:210px;box-shadow:1px 2px 8px rgba(0,0,0,0.08);}
+.sticker-eyebrow{font-size:0.6rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:0.25rem;}
+.sticker-body{font-size:0.78rem;color:var(--ink);line-height:1.5;font-weight:500;}
+.sparkle{position:absolute;bottom:115px;left:240px;z-index:10;font-size:1.6rem;color:var(--star);animation:twinkle 2.5s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:1;transform:scale(1) rotate(0deg)}50%{opacity:0.55;transform:scale(0.8) rotate(20deg)}}
+.folder-bg-title{position:absolute;bottom:18px;right:36px;z-index:1;font-family:'Playfair Display',serif;font-style:italic;font-size:3.2rem;color:rgba(44,36,22,0.07);white-space:nowrap;pointer-events:none;letter-spacing:-0.02em;user-select:none;}
 
-/* ── CLIP decoration ── */
-.deco-clip {
-  position:absolute; top:-10px; right:52px; z-index:20; width:32px;
-}
-.clip-top {
-  width:32px; height:38px;
-  background:#3a3025; border:2.5px solid #1a1208;
-  border-radius:5px 5px 0 0; position:relative;
-}
-.clip-top::before {
-  content:''; position:absolute; top:6px; left:5px; right:5px; height:12px;
-  border:2px solid #555; border-radius:2px;
-}
-.clip-bot {
-  width:22px; height:22px; margin:0 auto;
-  border:2.5px solid #1a1208; border-radius:0 0 11px 11px;
-  border-top:none; background:transparent;
-}
-
-/* ── PEN decoration ── */
-.deco-pen {
-  position:absolute; top:10px; right:16px; z-index:20;
-  width:10px; height:90px;
-  background:linear-gradient(#d0e8f0,#b0ccd8);
-  border-radius:5px 5px 2px 2px;
-  border:1px solid rgba(0,0,0,0.15);
-  transform:rotate(4deg);
-}
-.deco-pen::after {
-  content:''; position:absolute; bottom:-8px; left:2px;
-  width:6px; height:10px;
-  background:#888; border-radius:0 0 3px 3px;
-  clip-path:polygon(0 0,100% 0,50% 100%);
-}
-
-/* ── STICKER / label ── */
-.folder-sticker {
-  position:absolute; bottom:32px; left:36px; z-index:10;
-  background:#f8f4ee; border:1px solid var(--ink-light);
-  border-radius:6px; padding:0.6rem 1rem 0.7rem;
-  max-width:210px; box-shadow:1px 2px 8px rgba(0,0,0,0.08);
-}
-.sticker-eyebrow {
-  font-size:0.6rem; font-weight:700; letter-spacing:0.14em;
-  text-transform:uppercase; color:var(--ink-muted); margin-bottom:0.25rem;
-}
-.sticker-body { font-size:0.78rem; color:var(--ink); line-height:1.5; font-weight:500; }
-
-/* Star */
-.sparkle {
-  position:absolute; bottom:115px; left:240px; z-index:10;
-  font-size:1.6rem; color:var(--star);
-  animation:twinkle 2.5s ease-in-out infinite;
-}
-@keyframes twinkle { 0%,100%{opacity:1;transform:scale(1) rotate(0deg)} 50%{opacity:0.55;transform:scale(0.8) rotate(20deg)} }
-
-/* Big italic folder name */
-.folder-bg-title {
-  position:absolute; bottom:18px; right:36px; z-index:1;
-  font-family:'Playfair Display',serif; font-style:italic;
-  font-size:3.2rem; color:rgba(44,36,22,0.07);
-  white-space:nowrap; pointer-events:none; letter-spacing:-0.02em;
-  user-select:none;
+/* sync status bar inside folder */
+.sync-bar{
+  position:relative;z-index:6;
+  display:flex;align-items:center;justify-content:flex-end;
+  padding:0.4rem 1.5rem 0;
 }
 
 /* ── CONTENT ── */
-.content-area { display:none; padding:1.8rem 2rem 8rem; animation:fadeUp 0.3s ease; position:relative; z-index:5; }
-.content-area.active { display:block; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
-
-/* ── GRID ── */
-.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.2rem; }
-.grid-1 { margin-bottom:1.2rem; }
-.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.2rem; margin-bottom:1.2rem; }
+.content-area{display:none;padding:0.6rem 2rem 8rem;animation:fadeUp 0.3s ease;position:relative;z-index:5;}
+.content-area.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem;}
+.grid-1{margin-bottom:1.2rem;}
 
 /* ── PAPER CARDS ── */
-.pcard {
-  background:#fff; border:1px solid rgba(44,36,22,0.1);
-  border-radius:4px; padding:1.2rem 1.3rem;
-  box-shadow:2px 3px 14px rgba(0,0,0,0.06);
-  position:relative; transition:transform 0.15s,box-shadow 0.15s;
-}
-.pcard:hover { transform:translateY(-2px); box-shadow:2px 6px 20px rgba(0,0,0,0.1); }
-/* paperclip */
-.pcard.clip::before {
-  content:''; position:absolute; top:-7px; left:16px;
-  width:18px; height:26px;
-  border:2.5px solid var(--accent); border-radius:9px 9px 0 0;
-  background:transparent;
-}
-/* tape */
-.pcard.tape::after {
-  content:''; position:absolute; top:-5px; left:50%; transform:translateX(-50%);
-  width:44px; height:14px; background:rgba(200,169,110,0.35); border-radius:2px;
-}
-/* sticky label strip */
-.pcard.stripe { border-top:4px solid var(--active,#a8c4d0); }
-
-.clabel {
-  font-size:0.6rem; font-weight:700; letter-spacing:0.15em;
-  text-transform:uppercase; color:var(--ink-muted);
-  border-bottom:1px solid #f0e8dc; padding-bottom:0.45rem; margin-bottom:0.75rem;
-}
+.pcard{background:#fff;border:1px solid rgba(44,36,22,0.1);border-radius:4px;padding:1.2rem 1.3rem;box-shadow:2px 3px 14px rgba(0,0,0,0.06);position:relative;transition:transform 0.15s,box-shadow 0.15s;}
+.pcard:hover{transform:translateY(-2px);box-shadow:2px 6px 20px rgba(0,0,0,0.1);}
+.pcard.clip::before{content:'';position:absolute;top:-7px;left:16px;width:18px;height:26px;border:2.5px solid var(--accent);border-radius:9px 9px 0 0;background:transparent;}
+.pcard.tape::after{content:'';position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:44px;height:14px;background:rgba(200,169,110,0.35);border-radius:2px;}
+.pcard.stripe{border-top:4px solid #a8c4d0;transition:border-color 0.3s;}
+.clabel{font-size:0.6rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid #f0e8dc;padding-bottom:0.45rem;margin-bottom:0.75rem;}
 
 /* ── TASKS ── */
-.task-list { list-style:none; }
-.task-item {
-  display:flex; align-items:center; gap:0.6rem;
-  padding:0.4rem 0; border-bottom:1px dashed rgba(44,36,22,0.07);
-  font-size:0.84rem; color:var(--ink);
-}
-.task-item:last-child { border-bottom:none; }
-.task-item.done .tname { text-decoration:line-through; color:var(--ink-light); }
-.tcb { width:15px; height:15px; cursor:pointer; flex-shrink:0; accent-color:var(--ink); }
-.tname { flex:1; }
-.ttag { font-size:0.64rem; font-weight:700; padding:0.1rem 0.4rem; border-radius:999px; background:var(--bg); color:var(--ink-muted); white-space:nowrap; }
-.tdel { background:none; border:none; cursor:pointer; color:var(--ink-light); font-size:0.85rem; opacity:0; transition:opacity 0.15s; }
-.task-item:hover .tdel { opacity:1; }
-.empty-state { color:var(--ink-light); font-size:0.8rem; padding:0.5rem 0; font-style:italic; }
-
-/* add row */
-.add-row { display:flex; gap:0.5rem; margin-top:0.8rem; }
-input, select, textarea {
-  font-family:'DM Sans',sans-serif; font-size:0.82rem;
-  background:var(--bg); border:1px solid rgba(44,36,22,0.13);
-  border-radius:4px; padding:0.45rem 0.7rem;
-  color:var(--ink); outline:none; width:100%; transition:border-color 0.15s;
-}
-input:focus, select:focus, textarea:focus { border-color:var(--ink-muted); }
-input::placeholder, textarea::placeholder { color:var(--ink-light); }
-.btn {
-  font-family:'DM Sans',sans-serif; font-weight:700; font-size:0.8rem;
-  padding:0.45rem 1rem; border-radius:4px; border:none;
-  cursor:pointer; white-space:nowrap; transition:all 0.15s;
-  background:var(--ink); color:#faf7f2;
-}
-.btn:hover { background:#1a1208; }
-.btn-sm { padding:0.3rem 0.7rem; font-size:0.75rem; }
+.task-list{list-style:none;}
+.task-item{display:flex;align-items:center;gap:0.6rem;padding:0.4rem 0;border-bottom:1px dashed rgba(44,36,22,0.07);font-size:0.84rem;color:var(--ink);}
+.task-item:last-child{border-bottom:none;}
+.task-item.done .tname{text-decoration:line-through;color:var(--ink-light);}
+.tcb{width:15px;height:15px;cursor:pointer;flex-shrink:0;accent-color:var(--ink);}
+.tname{flex:1;}
+.ttag{font-size:0.64rem;font-weight:700;padding:0.1rem 0.4rem;border-radius:999px;background:var(--bg);color:var(--ink-muted);white-space:nowrap;}
+.tdel{background:none;border:none;cursor:pointer;color:var(--ink-light);font-size:0.85rem;opacity:0;transition:opacity 0.15s;}
+.task-item:hover .tdel{opacity:1;}
+.empty-state{color:var(--ink-light);font-size:0.8rem;padding:0.5rem 0;font-style:italic;}
+.add-row{display:flex;gap:0.5rem;margin-top:0.8rem;}
+input,select,textarea{font-family:'DM Sans',sans-serif;font-size:0.82rem;background:var(--bg);border:1px solid rgba(44,36,22,0.13);border-radius:4px;padding:0.45rem 0.7rem;color:var(--ink);outline:none;width:100%;transition:border-color 0.15s;}
+input:focus,select:focus,textarea:focus{border-color:var(--ink-muted);}
+input::placeholder,textarea::placeholder{color:var(--ink-light);}
+.btn{font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.8rem;padding:0.45rem 1rem;border-radius:4px;border:none;cursor:pointer;white-space:nowrap;transition:all 0.15s;background:var(--ink);color:#faf7f2;}
+.btn:hover{background:#1a1208;}
+.btn-sm{padding:0.3rem 0.7rem;font-size:0.75rem;}
+.btn-outline{background:transparent;border:1.5px solid rgba(250,247,242,0.25);color:#faf7f2;}
+.btn-outline:hover{background:rgba(250,247,242,0.1);}
 
 /* ── POMODORO ── */
-.pomo-wrap { display:flex; flex-direction:column; align-items:center; gap:0.9rem; }
-.pomo-modes { display:flex; gap:0.3rem; }
-.pmode {
-  padding:0.22rem 0.65rem; border-radius:999px; font-size:0.68rem; font-weight:700;
-  border:1.5px solid rgba(44,36,22,0.15); background:transparent; color:var(--ink-muted);
-  cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s;
-}
-.pmode.active { background:var(--ink); color:#faf7f2; border-color:var(--ink); }
-.pomo-ring-wrap { position:relative; width:136px; height:136px; }
-.pomo-ring-wrap svg { width:100%; height:100%; transform:rotate(-90deg); }
-.rbg { fill:none; stroke:#f0e8dc; stroke-width:10; }
-.rfill { fill:none; stroke:var(--ink); stroke-width:10; stroke-linecap:round; stroke-dasharray:408; stroke-dashoffset:0; transition:stroke-dashoffset 1s linear; }
-.pomo-inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.pomo-digits { font-family:'Playfair Display',serif; font-size:1.9rem; color:var(--ink); line-height:1; }
-.pomo-sublbl { font-size:0.58rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-muted); margin-top:2px; }
-.pomo-controls { display:flex; gap:0.45rem; }
-.pomo-dots { display:flex; gap:4px; }
-.pdot { width:9px; height:9px; border-radius:50%; border:1.5px solid var(--ink-muted); transition:all 0.2s; }
-.pdot.done { background:var(--ink); border-color:var(--ink); }
+.pomo-wrap{display:flex;flex-direction:column;align-items:center;gap:0.9rem;}
+.pomo-modes{display:flex;gap:0.3rem;}
+.pmode{padding:0.22rem 0.65rem;border-radius:999px;font-size:0.68rem;font-weight:700;border:1.5px solid rgba(44,36,22,0.15);background:transparent;color:var(--ink-muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.pmode.active{background:var(--ink);color:#faf7f2;border-color:var(--ink);}
+.pomo-ring-wrap{position:relative;width:136px;height:136px;}
+.pomo-ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg);}
+.rbg{fill:none;stroke:#f0e8dc;stroke-width:10;}
+.rfill{fill:none;stroke:var(--ink);stroke-width:10;stroke-linecap:round;stroke-dasharray:408;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear;}
+.pomo-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.pomo-digits{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--ink);line-height:1;}
+.pomo-sublbl{font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-muted);margin-top:2px;}
+.pomo-controls{display:flex;gap:0.45rem;}
+.pomo-dots{display:flex;gap:4px;}
+.pdot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--ink-muted);transition:all 0.2s;}
+.pdot.done{background:var(--ink);border-color:var(--ink);}
 
 /* ── PROGRESS ── */
-.prog-row { display:flex; justify-content:space-between; font-size:0.72rem; color:var(--ink-muted); margin-bottom:4px; }
-.prog-track { height:6px; background:var(--bg); border-radius:999px; overflow:hidden; }
-.prog-fill { height:100%; background:var(--ink); border-radius:999px; transition:width 0.4s; }
+.prog-row{display:flex;justify-content:space-between;font-size:0.72rem;color:var(--ink-muted);margin-bottom:4px;}
+.prog-track{height:6px;background:var(--bg);border-radius:999px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--ink);border-radius:999px;transition:width 0.4s;}
 
 /* ── LINED TEXTAREA ── */
-.lined {
-  background:repeating-linear-gradient(#fff,#fff 23px,#ece4d8 23px,#ece4d8 24px);
-  border:1px solid rgba(44,36,22,0.1); border-radius:4px;
-  padding:0.6rem 0.8rem; line-height:24px;
-  font-family:'DM Sans',sans-serif; font-size:0.82rem; color:var(--ink);
-  min-height:96px; resize:vertical; outline:none; width:100%;
-}
-.lined:focus { border-color:var(--ink-muted); }
+.lined{background:repeating-linear-gradient(#fff,#fff 23px,#ece4d8 23px,#ece4d8 24px);border:1px solid rgba(44,36,22,0.1);border-radius:4px;padding:0.6rem 0.8rem;line-height:24px;font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--ink);min-height:96px;resize:vertical;outline:none;width:100%;}
+.lined:focus{border-color:var(--ink-muted);}
 
-/* ── HABIT TRACKER ── */
-.habit-grid { display:flex; flex-direction:column; gap:0.5rem; }
-.habit-row { display:flex; align-items:center; gap:0.5rem; }
-.hname { font-size:0.8rem; color:var(--ink); min-width:100px; flex-shrink:0; }
-.hchecks { display:flex; gap:3px; }
-.hcheck {
-  width:23px; height:23px; border-radius:3px;
-  border:1.5px solid #e8e0d4; background:#f8f4ee;
-  cursor:pointer; display:flex; align-items:center; justify-content:center;
-  font-size:0.68rem; font-weight:700; color:transparent;
-  transition:all 0.15s;
-}
-.hcheck.done { background:var(--ink); color:#faf7f2; border-color:var(--ink); }
-.hdel { background:none; border:none; cursor:pointer; color:var(--ink-light); font-size:0.8rem; margin-left:auto; }
+/* ── HABITS ── */
+.habit-grid{display:flex;flex-direction:column;gap:0.5rem;}
+.habit-row{display:flex;align-items:center;gap:0.5rem;}
+.hname{font-size:0.8rem;color:var(--ink);min-width:100px;flex-shrink:0;}
+.hchecks{display:flex;gap:3px;}
+.hcheck{width:23px;height:23px;border-radius:3px;border:1.5px solid #e8e0d4;background:#f8f4ee;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:transparent;transition:all 0.15s;}
+.hcheck.done{background:var(--ink);color:#faf7f2;border-color:var(--ink);}
+.hdel{background:none;border:none;cursor:pointer;color:var(--ink-light);font-size:0.8rem;margin-left:auto;}
 
 /* ── MINI CALENDAR ── */
-.mcal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.65rem; }
-.mcal-title { font-family:'Playfair Display',serif; font-size:1rem; color:var(--ink); }
-.carr { width:26px; height:26px; border-radius:50%; border:1px solid #ece4d8; background:transparent; cursor:pointer; color:var(--ink-muted); font-size:0.9rem; transition:all 0.15s; }
-.carr:hover { background:var(--bg); }
-.mcal-days { display:grid; grid-template-columns:repeat(7,1fr); text-align:center; margin-bottom:0.25rem; }
-.mcal-days span { font-size:0.6rem; font-weight:700; color:var(--ink-light); text-transform:uppercase; }
-.mcal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
-.mcell {
-  aspect-ratio:1; border-radius:4px; font-size:0.73rem;
-  color:var(--ink-muted); cursor:pointer;
-  display:flex; align-items:center; justify-content:center;
-  transition:background 0.12s;
+.mcal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.65rem;}
+.mcal-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--ink);}
+.carr{width:26px;height:26px;border-radius:50%;border:1px solid #ece4d8;background:transparent;cursor:pointer;color:var(--ink-muted);font-size:0.9rem;transition:all 0.15s;}
+.carr:hover{background:var(--bg);}
+.mcal-days{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:0.25rem;}
+.mcal-days span{font-size:0.6rem;font-weight:700;color:var(--ink-light);text-transform:uppercase;}
+.mcal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.mcell{aspect-ratio:1;border-radius:4px;font-size:0.73rem;color:var(--ink-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.12s;}
+.mcell:hover{background:var(--bg);}
+.mcell.today{background:var(--ink);color:#faf7f2;font-weight:700;}
+.mcell.other{opacity:0.3;}
+
+/* loading overlay */
+#loading-overlay{
+  position:fixed;inset:0;z-index:400;background:#271c10;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;
 }
-.mcell:hover { background:var(--bg); }
-.mcell.today { background:var(--ink); color:#faf7f2; font-weight:700; }
-.mcell.other { opacity:0.3; }
+#loading-overlay.hidden{display:none;}
+.loading-logo{font-family:'Playfair Display',serif;font-style:italic;font-size:2.5rem;color:#faf7f2;}
+.loading-logo em{color:var(--accent);}
+.loading-spinner{width:32px;height:32px;border:3px solid rgba(250,247,242,0.15);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:0.78rem;color:var(--ink-light);letter-spacing:0.08em;}
 </style>
 </head>
 <body>
 
-<div class="top-bar">
-  <div class="logo">My <em>Planner</em></div>
-  <div class="date-chip" id="top-date"></div>
+<!-- LOADING -->
+<div id="loading-overlay">
+  <div class="loading-logo">My <em>Planner</em></div>
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading your planner...</div>
 </div>
 
-<!-- FOLDER TABS -->
-<div class="folder-tabs">
-  <div class="ftab active" data-f="1" onclick="switchFolder(1,this)">Social</div>
-  <div class="ftab" data-f="2" onclick="switchFolder(2,this)">Academic</div>
-  <div class="ftab" data-f="3" onclick="switchFolder(3,this)">Work</div>
-  <div class="ftab" data-f="4" onclick="switchFolder(4,this)">Gym</div>
-  <div class="ftab" data-f="5" onclick="switchFolder(5,this)">Health</div>
-  <div class="ftab" data-f="6" onclick="switchFolder(6,this)">Hobbies</div>
+<!-- LOGIN SCREEN -->
+<div id="login-screen" class="hidden">
+  <div class="login-logo">My <em>Planner</em></div>
+  <div class="login-sub">Sign in to sync your data across all devices</div>
+  <button class="google-btn" onclick="signIn()">
+    <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    Continue with Google
+  </button>
+  <div class="login-note">Your tasks, habits, and notes will sync automatically every time you sign in.</div>
 </div>
 
-<!-- FOLDER BODY -->
-<div class="folder-body">
-  <div id="strip"></div>
+<!-- MAIN APP -->
+<div id="app" style="width:100%;display:flex;flex-direction:column;align-items:center;">
 
-  <!-- Decorations -->
-  <div class="deco-clip">
-    <div class="clip-top"></div>
-    <div class="clip-bot"></div>
-  </div>
-  <div class="deco-pen"></div>
-  <div class="sparkle">✦</div>
-
-  <div class="folder-sticker">
-    <div class="sticker-eyebrow" id="sticker-eye">Section 01</div>
-    <div class="sticker-body" id="sticker-body">Plans, hangouts & people</div>
-  </div>
-
-  <div class="folder-bg-title" id="folder-bg-title">Social</div>
-
-  <!-- ══ SOCIAL ══ -->
-  <div class="content-area active" id="c1">
-    <div class="grid-2">
-      <div class="pcard clip">
-        <div class="clabel">To-Do · Social Plans</div>
-        <ul class="task-list" id="tl-social"></ul>
-        <div class="add-row">
-          <input type="text" id="in-social" placeholder="Add a plan or event...">
-          <button class="btn" onclick="addTask('social')">+</button>
-        </div>
-      </div>
-      <div class="pcard tape">
-        <div class="clabel">Calendar</div>
-        <div id="cal-social"></div>
-      </div>
-    </div>
-    <div class="grid-1">
-      <div class="pcard stripe">
-        <div class="clabel">Notes · People & Plans</div>
-        <textarea class="lined" id="note-social" placeholder="Jot down plans, ideas, people to catch up with..."></textarea>
+  <div class="top-bar">
+    <div class="logo">My <em>Planner</em></div>
+    <div class="top-right">
+      <div class="date-chip" id="top-date"></div>
+      <div class="user-pill" onclick="signOut()" title="Click to sign out">
+        <div class="user-avatar-placeholder" id="user-avatar">?</div>
+        <span class="user-name" id="user-name">...</span>
       </div>
     </div>
   </div>
 
-  <!-- ══ ACADEMIC ══ -->
-  <div class="content-area" id="c2">
-    <div class="grid-2">
-      <div class="pcard clip">
-        <div class="clabel">Assignments & Tasks</div>
-        <ul class="task-list" id="tl-academic"></ul>
-        <div class="add-row">
-          <input type="text" id="in-academic" placeholder="Add assignment...">
-          <select id="tag-academic" style="max-width:90px;">
-            <option value="📚">📚 Study</option>
-            <option value="📝">📝 Essay</option>
-            <option value="🔬">🔬 Lab</option>
-            <option value="📐">📐 Maths</option>
-            <option value="📖">📖 Reading</option>
-          </select>
-          <button class="btn" onclick="addTask('academic')">+</button>
-        </div>
-      </div>
-      <div class="pcard">
-        <div class="clabel">Study Timer · Pomodoro 🍅</div>
-        <div class="pomo-wrap">
-          <div class="pomo-modes">
-            <button class="pmode active" onclick="setMode('focus',this)">25m</button>
-            <button class="pmode" onclick="setMode('short',this)">5m</button>
-            <button class="pmode" onclick="setMode('long',this)">15m</button>
+  <div class="folder-tabs">
+    <div class="ftab active" data-f="1" onclick="switchFolder(1,this)">Social</div>
+    <div class="ftab" data-f="2" onclick="switchFolder(2,this)">Academic</div>
+    <div class="ftab" data-f="3" onclick="switchFolder(3,this)">Work</div>
+    <div class="ftab" data-f="4" onclick="switchFolder(4,this)">Gym</div>
+    <div class="ftab" data-f="5" onclick="switchFolder(5,this)">Health</div>
+    <div class="ftab" data-f="6" onclick="switchFolder(6,this)">Hobbies</div>
+  </div>
+
+  <div class="folder-body">
+    <div id="strip"></div>
+    <div class="sync-bar">
+      <div class="sync-label"><span class="sync-dot" id="sync-dot"></span><span id="sync-text">Connecting...</span></div>
+    </div>
+    <div class="deco-clip"><div class="clip-top"></div><div class="clip-bot"></div></div>
+    <div class="deco-pen"></div>
+    <div class="sparkle">✦</div>
+    <div class="folder-sticker">
+      <div class="sticker-eyebrow" id="sticker-eye">Section 01 · Social</div>
+      <div class="sticker-body" id="sticker-body">Plans, hangouts & people</div>
+    </div>
+    <div class="folder-bg-title" id="folder-bg-title">Social</div>
+
+    <!-- SOCIAL -->
+    <div class="content-area active" id="c1">
+      <div class="grid-2">
+        <div class="pcard clip">
+          <div class="clabel">To-Do · Social Plans</div>
+          <ul class="task-list" id="tl-social"></ul>
+          <div class="add-row">
+            <input type="text" id="in-social" placeholder="Add a plan or event..." onkeydown="if(event.key==='Enter')addTask('social')">
+            <button class="btn" onclick="addTask('social')">+</button>
           </div>
-          <div class="pomo-ring-wrap">
-            <svg viewBox="0 0 130 130"><circle class="rbg" cx="65" cy="65" r="55"/><circle class="rfill" id="pring" cx="65" cy="65" r="55"/></svg>
-            <div class="pomo-inner">
-              <div class="pomo-digits" id="pdisp">25:00</div>
-              <div class="pomo-sublbl" id="pmodelbl">Focus</div>
+        </div>
+        <div class="pcard tape">
+          <div class="clabel">Calendar</div>
+          <div id="cal-social"></div>
+        </div>
+      </div>
+      <div class="grid-1">
+        <div class="pcard stripe" id="stripe-1">
+          <div class="clabel">Notes · People & Plans</div>
+          <textarea class="lined" id="note-social" placeholder="Jot down plans, ideas, people to catch up with..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACADEMIC -->
+    <div class="content-area" id="c2">
+      <div class="grid-2">
+        <div class="pcard clip">
+          <div class="clabel">Assignments & Tasks</div>
+          <ul class="task-list" id="tl-academic"></ul>
+          <div class="add-row">
+            <input type="text" id="in-academic" placeholder="Add assignment..." onkeydown="if(event.key==='Enter')addTask('academic')">
+            <select id="tag-academic" style="max-width:90px;">
+              <option value="📚">📚 Study</option>
+              <option value="📝">📝 Essay</option>
+              <option value="🔬">🔬 Lab</option>
+              <option value="📐">📐 Maths</option>
+              <option value="📖">📖 Reading</option>
+            </select>
+            <button class="btn" onclick="addTask('academic')">+</button>
+          </div>
+        </div>
+        <div class="pcard">
+          <div class="clabel">Study Timer · Pomodoro 🍅</div>
+          <div class="pomo-wrap">
+            <div class="pomo-modes">
+              <button class="pmode active" onclick="setMode('focus',this)">25m</button>
+              <button class="pmode" onclick="setMode('short',this)">5m</button>
+              <button class="pmode" onclick="setMode('long',this)">15m</button>
+            </div>
+            <div class="pomo-ring-wrap">
+              <svg viewBox="0 0 130 130"><circle class="rbg" cx="65" cy="65" r="55"/><circle class="rfill" id="pring" cx="65" cy="65" r="55"/></svg>
+              <div class="pomo-inner">
+                <div class="pomo-digits" id="pdisp">25:00</div>
+                <div class="pomo-sublbl" id="pmodelbl">Focus</div>
+              </div>
+            </div>
+            <div class="pomo-dots" id="pdots"></div>
+            <div class="pomo-controls">
+              <button class="btn btn-sm" onclick="pomoReset()">↺</button>
+              <button class="btn btn-sm" id="pbtn" onclick="pomoToggle()">▶ Start</button>
+              <button class="btn btn-sm" onclick="pomoSkip()">›</button>
             </div>
           </div>
-          <div class="pomo-dots" id="pdots"></div>
-          <div class="pomo-controls">
-            <button class="btn btn-sm" onclick="pomoReset()">↺</button>
-            <button class="btn btn-sm" id="pbtn" onclick="pomoToggle()">▶ Start</button>
-            <button class="btn btn-sm" onclick="pomoSkip()">›</button>
+        </div>
+      </div>
+      <div class="grid-1">
+        <div class="pcard stripe" id="stripe-2">
+          <div class="clabel">Study Notes</div>
+          <textarea class="lined" id="note-academic" placeholder="Class notes, formulas, key concepts..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORK -->
+    <div class="content-area" id="c3">
+      <div class="grid-2">
+        <div class="pcard clip">
+          <div class="clabel">Work Tasks</div>
+          <ul class="task-list" id="tl-work"></ul>
+          <div class="add-row">
+            <input type="text" id="in-work" placeholder="Add work task..." onkeydown="if(event.key==='Enter')addTask('work')">
+            <select id="tag-work" style="max-width:90px;">
+              <option value="🔥">🔥 Urgent</option>
+              <option value="📋">📋 Normal</option>
+              <option value="💡">💡 Idea</option>
+              <option value="📞">📞 Call</option>
+            </select>
+            <button class="btn" onclick="addTask('work')">+</button>
+          </div>
+        </div>
+        <div class="pcard tape">
+          <div class="clabel">Progress</div>
+          <div class="prog-row"><span>Completed</span><span id="wp-txt">0 / 0</span></div>
+          <div class="prog-track"><div class="prog-fill" id="wp-bar" style="width:0%"></div></div>
+          <div style="margin-top:1.1rem;">
+            <div class="clabel">Calendar</div>
+            <div id="cal-work"></div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="grid-1">
-      <div class="pcard stripe">
-        <div class="clabel">Study Notes</div>
-        <textarea class="lined" id="note-academic" placeholder="Class notes, formulas, key concepts..."></textarea>
+      <div class="grid-1">
+        <div class="pcard stripe" id="stripe-3">
+          <div class="clabel">Work Notes · Ideas & Follow-ups</div>
+          <textarea class="lined" id="note-work" placeholder="Meeting notes, ideas, action items..."></textarea>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ══ WORK ══ -->
-  <div class="content-area" id="c3">
-    <div class="grid-2">
-      <div class="pcard clip">
-        <div class="clabel">Work Tasks</div>
-        <ul class="task-list" id="tl-work"></ul>
-        <div class="add-row">
-          <input type="text" id="in-work" placeholder="Add work task...">
-          <select id="tag-work" style="max-width:90px;">
-            <option value="🔥">🔥 Urgent</option>
-            <option value="📋">📋 Normal</option>
-            <option value="💡">💡 Idea</option>
-            <option value="📞">📞 Call</option>
-          </select>
-          <button class="btn" onclick="addTask('work')">+</button>
+    <!-- GYM -->
+    <div class="content-area" id="c4">
+      <div class="grid-2">
+        <div class="pcard clip">
+          <div class="clabel">Workout Log</div>
+          <ul class="task-list" id="tl-gym"></ul>
+          <div class="add-row">
+            <input type="text" id="in-gym" placeholder="e.g. Leg Day — Squats 3×10" onkeydown="if(event.key==='Enter')addTask('gym')">
+            <button class="btn" onclick="addTask('gym')">+</button>
+          </div>
+        </div>
+        <div class="pcard">
+          <div class="clabel">Weekly Habit Tracker</div>
+          <div class="habit-grid" id="hg-gym"></div>
+          <div class="add-row" style="margin-top:0.8rem;">
+            <input type="text" id="ih-gym" placeholder="Add habit (e.g. Morning run)" onkeydown="if(event.key==='Enter')addHabit('gym')">
+            <button class="btn" onclick="addHabit('gym')">+</button>
+          </div>
         </div>
       </div>
-      <div class="pcard tape">
-        <div class="clabel">Progress</div>
-        <div class="prog-row"><span>Completed</span><span id="wp-txt">0 / 0</span></div>
-        <div class="prog-track"><div class="prog-fill" id="wp-bar" style="width:0%"></div></div>
-        <div style="margin-top:1.1rem;">
-          <div class="clabel">Calendar</div>
-          <div id="cal-work"></div>
+      <div class="grid-1">
+        <div class="pcard stripe" id="stripe-4">
+          <div class="clabel">Gym Notes · Goals & PRs</div>
+          <textarea class="lined" id="note-gym" placeholder="Goals, personal records, programmes..."></textarea>
         </div>
       </div>
     </div>
-    <div class="grid-1">
-      <div class="pcard stripe">
-        <div class="clabel">Work Notes · Ideas & Follow-ups</div>
-        <textarea class="lined" id="note-work" placeholder="Meeting notes, ideas, action items..."></textarea>
-      </div>
-    </div>
-  </div>
 
-  <!-- ══ GYM ══ -->
-  <div class="content-area" id="c4">
-    <div class="grid-2">
-      <div class="pcard clip">
-        <div class="clabel">Workout Log</div>
-        <ul class="task-list" id="tl-gym"></ul>
-        <div class="add-row">
-          <input type="text" id="in-gym" placeholder="e.g. Leg Day — Squats 3×10">
-          <button class="btn" onclick="addTask('gym')">+</button>
+    <!-- HEALTH -->
+    <div class="content-area" id="c5">
+      <div class="grid-2">
+        <div class="pcard clip">
+          <div class="clabel">Health To-Dos</div>
+          <ul class="task-list" id="tl-health"></ul>
+          <div class="add-row">
+            <input type="text" id="in-health" placeholder="e.g. Book dentist, pick up prescription" onkeydown="if(event.key==='Enter')addTask('health')">
+            <button class="btn" onclick="addTask('health')">+</button>
+          </div>
+        </div>
+        <div class="pcard">
+          <div class="clabel">Daily Wellness Tracker</div>
+          <div class="habit-grid" id="hg-health"></div>
+          <div class="add-row" style="margin-top:0.8rem;">
+            <input type="text" id="ih-health" placeholder="Add habit (e.g. Drink 2L water)" onkeydown="if(event.key==='Enter')addHabit('health')">
+            <button class="btn" onclick="addHabit('health')">+</button>
+          </div>
         </div>
       </div>
-      <div class="pcard">
-        <div class="clabel">Weekly Habit Tracker</div>
-        <div class="habit-grid" id="hg-gym"></div>
-        <div class="add-row" style="margin-top:0.8rem;">
-          <input type="text" id="ih-gym" placeholder="Add habit (e.g. Morning run)">
-          <button class="btn" onclick="addHabit('gym')">+</button>
+      <div class="grid-1">
+        <div class="pcard stripe" id="stripe-5">
+          <div class="clabel">Health Notes · Mood & Wellbeing</div>
+          <textarea class="lined" id="note-health" placeholder="How are you feeling? Energy, mood, symptoms..."></textarea>
         </div>
       </div>
     </div>
-    <div class="grid-1">
-      <div class="pcard stripe">
-        <div class="clabel">Gym Notes · Goals & PRs</div>
-        <textarea class="lined" id="note-gym" placeholder="Goals, personal records, programmes..."></textarea>
-      </div>
-    </div>
-  </div>
 
-  <!-- ══ HEALTH ══ -->
-  <div class="content-area" id="c5">
-    <div class="grid-2">
-      <div class="pcard clip">
-        <div class="clabel">Health To-Dos</div>
-        <ul class="task-list" id="tl-health"></ul>
-        <div class="add-row">
-          <input type="text" id="in-health" placeholder="e.g. Book dentist, pick up prescription">
-          <button class="btn" onclick="addTask('health')">+</button>
+    <!-- HOBBIES -->
+    <div class="content-area" id="c6">
+      <div class="grid-2">
+        <div class="pcard clip">
+          <div class="clabel">Projects & Ideas</div>
+          <ul class="task-list" id="tl-hobbies"></ul>
+          <div class="add-row">
+            <input type="text" id="in-hobbies" placeholder="Add a project, idea or goal..." onkeydown="if(event.key==='Enter')addTask('hobbies')">
+            <button class="btn" onclick="addTask('hobbies')">+</button>
+          </div>
+        </div>
+        <div class="pcard tape">
+          <div class="clabel">Bucket List & Inspiration</div>
+          <textarea class="lined" id="note-hobbies-list" placeholder="Things I want to try, places to go, stuff to make..." style="min-height:80px;"></textarea>
         </div>
       </div>
-      <div class="pcard">
-        <div class="clabel">Daily Wellness Tracker</div>
-        <div class="habit-grid" id="hg-health"></div>
-        <div class="add-row" style="margin-top:0.8rem;">
-          <input type="text" id="ih-health" placeholder="Add habit (e.g. Drink 2L water)">
-          <button class="btn" onclick="addHabit('health')">+</button>
+      <div class="grid-1">
+        <div class="pcard stripe" id="stripe-6">
+          <div class="clabel">Hobby Notes · References & Links</div>
+          <textarea class="lined" id="note-hobbies" placeholder="Project notes, tutorials, references..."></textarea>
         </div>
       </div>
     </div>
-    <div class="grid-1">
-      <div class="pcard stripe">
-        <div class="clabel">Health Notes · Mood & Wellbeing</div>
-        <textarea class="lined" id="note-health" placeholder="How are you feeling? Energy, mood, symptoms..."></textarea>
-      </div>
-    </div>
-  </div>
 
-  <!-- ══ HOBBIES ══ -->
-  <div class="content-area" id="c6">
-    <div class="grid-2">
-      <div class="pcard clip">
-        <div class="clabel">Projects & Ideas</div>
-        <ul class="task-list" id="tl-hobbies"></ul>
-        <div class="add-row">
-          <input type="text" id="in-hobbies" placeholder="Add a project, idea or goal...">
-          <button class="btn" onclick="addTask('hobbies')">+</button>
-        </div>
-      </div>
-      <div class="pcard tape">
-        <div class="clabel">Bucket List & Inspiration</div>
-        <textarea class="lined" id="note-hobbies-list" placeholder="Things I want to try, places to go, stuff to make..." style="min-height:80px;"></textarea>
-      </div>
-    </div>
-    <div class="grid-1">
-      <div class="pcard stripe">
-        <div class="clabel">Hobby Notes · References & Links</div>
-        <textarea class="lined" id="note-hobbies" placeholder="Project notes, tutorials, references..."></textarea>
-      </div>
-    </div>
-  </div>
+  </div><!-- /folder-body -->
+</div><!-- /app -->
 
-</div><!-- /folder-body -->
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as fbSignOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, onSnapshot, setDoc, getDoc }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyAe-YuVihlb8Q3mxjKTAu1F0pMN3zhwAkk",
+  authDomain: "elly-site-cff01.firebaseapp.com",
+  projectId: "elly-site-cff01",
+  storageBucket: "elly-site-cff01.firebasestorage.app",
+  messagingSenderId: "929586758261",
+  appId: "1:929586758261:web:91e413f9efa0d96620ae3c",
+  measurementId: "G-JXL83VYVNR"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+let uid = null;
+let unsubscribe = null;
+let saveTimer = null;
+
+// Expose to global scope
+window._fbSignIn = () => signInWithPopup(auth, provider);
+window._fbSignOut = () => fbSignOut(auth);
+
+// ── AUTH STATE ──
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    uid = user.uid;
+    // Update UI
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('loading-overlay').classList.remove('hidden');
+    document.getElementById('user-name').textContent = user.displayName?.split(' ')[0] || 'You';
+    const avatarEl = document.getElementById('user-avatar');
+    if (user.photoURL) {
+      avatarEl.outerHTML = `<img class="user-avatar" id="user-avatar" src="${user.photoURL}" alt="avatar">`;
+    } else {
+      avatarEl.textContent = (user.displayName||'U')[0].toUpperCase();
+    }
+    // Start real-time listener
+    startSync(uid);
+  } else {
+    uid = null;
+    if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+    document.getElementById('loading-overlay').classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+  }
+});
+
+function startSync(uid) {
+  const ref = doc(db, 'planners', uid);
+  setSyncStatus('syncing','Connecting...');
+
+  // Real-time listener — fires immediately with current data
+  unsubscribe = onSnapshot(ref, snap => {
+    document.getElementById('loading-overlay').classList.add('hidden');
+    if (snap.exists()) {
+      const data = snap.data();
+      window._remoteLoad(data);
+    }
+    setSyncStatus('synced','Synced');
+  }, err => {
+    console.error(err);
+    setSyncStatus('error','Sync error');
+  });
+
+  // Expose save function
+  window._saveToFirestore = async (data) => {
+    setSyncStatus('syncing','Saving...');
+    try {
+      await setDoc(doc(db,'planners',uid), data, {merge:true});
+      setSyncStatus('synced','Saved ✦');
+      setTimeout(()=>setSyncStatus('synced','Synced'), 1500);
+    } catch(e) {
+      console.error(e);
+      setSyncStatus('error','Save failed');
+    }
+  };
+}
+
+function setSyncStatus(state, text) {
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-text');
+  dot.className = 'sync-dot ' + state;
+  lbl.textContent = text;
+}
+</script>
+
+<!-- APP LOGIC -->
 <script>
-// ── CONFIG ──
 const FCOLORS = {1:'#a8c4d0',2:'#b8cca8',3:'#ccc0a0',4:'#bcaec8',5:'#c8b0b0',6:'#a8c0b8'};
 const FMETA = {
-  1:{eye:'Section 01 · Social', body:'Plans, hangouts & people', title:'Social'},
-  2:{eye:'Section 02 · Academic', body:'Assignments, study & goals', title:'Academic'},
-  3:{eye:'Section 03 · Work', body:'Tasks, projects & meetings', title:'Work'},
-  4:{eye:'Section 04 · Gym', body:'Workouts, habits & PRs', title:'Gym'},
-  5:{eye:'Section 05 · Health', body:'Wellness, habits & self-care', title:'Health'},
-  6:{eye:'Section 06 · Hobbies', body:'Projects, ideas & passions', title:'Hobbies'},
+  1:{eye:'Section 01 · Social',body:'Plans, hangouts & people',title:'Social'},
+  2:{eye:'Section 02 · Academic',body:'Assignments, study & goals',title:'Academic'},
+  3:{eye:'Section 03 · Work',body:'Tasks, projects & meetings',title:'Work'},
+  4:{eye:'Section 04 · Gym',body:'Workouts, habits & PRs',title:'Gym'},
+  5:{eye:'Section 05 · Health',body:'Wellness, habits & self-care',title:'Health'},
+  6:{eye:'Section 06 · Hobbies',body:'Projects, ideas & passions',title:'Hobbies'},
 };
-const DAYS_ABBR = ['M','T','W','T','F','S','S'];
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const POMO_T = {focus:1500,short:300,long:900};
+const DAYS_ABBR=['M','T','W','T','F','S','S'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const POMO_T={focus:1500,short:300,long:900};
 
-// ── STATE ──
-let tasks = JSON.parse(localStorage.getItem('mp3_tasks')||'{}');
-let notes = JSON.parse(localStorage.getItem('mp3_notes')||'{}');
-let habits = JSON.parse(localStorage.getItem('mp3_habits')||'{}');
-let hchecks = JSON.parse(localStorage.getItem('mp3_hchecks')||'{}');
-let pomoSess = parseInt(localStorage.getItem('mp3_pomo')||'0');
+// ── LOCAL STATE (mirrored to Firestore) ──
+let tasks={}, notes={}, habits={}, hchecks={}, pomoSess=0;
 let pMode='focus', pRem=1500, pPeriod=1500, pRunning=false, pIv=null;
 let calM=new Date().getMonth(), calY=new Date().getFullYear();
+let saveTimer=null;
 
-function persist() {
-  localStorage.setItem('mp3_tasks',JSON.stringify(tasks));
-  localStorage.setItem('mp3_notes',JSON.stringify(notes));
-  localStorage.setItem('mp3_habits',JSON.stringify(habits));
-  localStorage.setItem('mp3_hchecks',JSON.stringify(hchecks));
+// ── LOAD FROM FIRESTORE (called by module script) ──
+window._remoteLoad = (data) => {
+  tasks   = data.tasks   || {};
+  notes   = data.notes   || {};
+  habits  = data.habits  || {};
+  hchecks = data.hchecks || {};
+  pomoSess= data.pomoSess|| 0;
+  // Hydrate notes into textareas
+  ['social','academic','work','gym','health','hobbies','hobbies-list'].forEach(k => {
+    const el = document.getElementById('note-'+k);
+    if (el && notes[k] !== undefined) el.value = notes[k];
+  });
+  // Re-render everything
+  ['social','academic','work','gym','health','hobbies'].forEach(k => { renderTasks(k); renderHabits(k); });
+  updateWorkProg(); renderPomoDots();
+};
+
+// ── DEBOUNCED SAVE ──
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    if (window._saveToFirestore) {
+      window._saveToFirestore({ tasks, notes, habits, hchecks, pomoSess });
+    }
+  }, 800);
 }
+
+// ── AUTH BUTTONS ──
+function signIn()  { window._fbSignIn && window._fbSignIn(); }
+function signOut() { if(confirm('Sign out?')) window._fbSignOut && window._fbSignOut(); }
 
 // ── INIT ──
 window.onload = () => {
   document.getElementById('top-date').textContent =
     new Date().toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short',year:'numeric'}).toUpperCase();
-  // notes
+  // Note textarea listeners
   ['social','academic','work','gym','health','hobbies','hobbies-list'].forEach(k => {
     const el = document.getElementById('note-'+k);
     if (!el) return;
-    el.value = notes[k]||'';
-    el.addEventListener('input',()=>{ notes[k]=el.value; persist(); });
+    el.addEventListener('input', () => { notes[k]=el.value; scheduleSave(); });
   });
-  switchFolder(1,document.querySelector('.ftab[data-f="1"]'));
-  renderPomoDots(); updatePomo();
+  switchFolder(1, document.querySelector('.ftab[data-f="1"]'));
+  updatePomo();
 };
 
 // ── FOLDER SWITCH ──
@@ -592,35 +641,35 @@ function switchFolder(n, el) {
   el.classList.add('active');
   document.querySelectorAll('.content-area').forEach(c=>c.classList.remove('active'));
   document.getElementById('c'+n).classList.add('active');
-  const color = FCOLORS[n], meta = FMETA[n];
-  document.getElementById('strip').style.background = color;
-  document.getElementById('sticker-eye').textContent = meta.eye;
-  document.getElementById('sticker-body').textContent = meta.body;
-  document.getElementById('folder-bg-title').textContent = meta.title;
-  // render
-  ['social','academic','work','gym','health','hobbies'].forEach((k,i)=>{
-    renderTasks(k); renderHabits(k);
-  });
+  const color=FCOLORS[n], meta=FMETA[n];
+  document.getElementById('strip').style.background=color;
+  document.getElementById('sticker-eye').textContent=meta.eye;
+  document.getElementById('sticker-body').textContent=meta.body;
+  document.getElementById('folder-bg-title').textContent=meta.title;
+  // Update stripe cards
+  for(let i=1;i<=6;i++){const s=document.getElementById('stripe-'+i);if(s)s.style.borderTopColor=FCOLORS[i];}
   renderCal('cal-social'); renderCal('cal-work');
+  ['social','academic','work','gym','health','hobbies'].forEach(k=>{renderTasks(k);renderHabits(k);});
   updateWorkProg();
 }
 
 // ── TASKS ──
 function addTask(key) {
-  const inp = document.getElementById('in-'+key);
-  const name = inp.value.trim(); if (!name) return;
-  if (!tasks[key]) tasks[key]=[];
-  const tagEl = document.getElementById('tag-'+key);
+  const inp=document.getElementById('in-'+key);
+  const name=inp.value.trim(); if(!name)return;
+  if(!tasks[key])tasks[key]=[];
+  const tagEl=document.getElementById('tag-'+key);
   tasks[key].push({id:Date.now()+'',name,tag:tagEl?tagEl.value:'',done:false});
-  inp.value=''; persist(); renderTasks(key);
-  if (key==='work') updateWorkProg();
+  inp.value=''; renderTasks(key);
+  if(key==='work')updateWorkProg();
+  scheduleSave();
 }
 function toggleTask(key,id) {
   const t=tasks[key]?.find(t=>t.id===id);
-  if(t){t.done=!t.done; persist(); renderTasks(key); if(key==='work')updateWorkProg();}
+  if(t){t.done=!t.done; renderTasks(key); if(key==='work')updateWorkProg(); scheduleSave();}
 }
 function delTask(key,id) {
-  if(tasks[key]){tasks[key]=tasks[key].filter(t=>t.id!==id); persist(); renderTasks(key); if(key==='work')updateWorkProg();}
+  if(tasks[key]){tasks[key]=tasks[key].filter(t=>t.id!==id); renderTasks(key); if(key==='work')updateWorkProg(); scheduleSave();}
 }
 function renderTasks(key) {
   const el=document.getElementById('tl-'+key); if(!el)return;
@@ -638,7 +687,7 @@ function updateWorkProg() {
   const list=tasks['work']||[];
   const done=list.filter(t=>t.done).length;
   const pct=list.length?Math.round(done/list.length*100):0;
-  const b=document.getElementById('wp-bar'), tx=document.getElementById('wp-txt');
+  const b=document.getElementById('wp-bar'),tx=document.getElementById('wp-txt');
   if(b)b.style.width=pct+'%'; if(tx)tx.textContent=`${done} / ${list.length}`;
 }
 
@@ -648,13 +697,13 @@ function addHabit(key) {
   const name=inp.value.trim(); if(!name)return;
   if(!habits[key])habits[key]=[];
   habits[key].push({id:Date.now()+'',name});
-  inp.value=''; persist(); renderHabits(key);
+  inp.value=''; renderHabits(key); scheduleSave();
 }
 function toggleHabit(key,hid,day) {
-  const ck=`${key}_${hid}_${day}`; hchecks[ck]=!hchecks[ck]; persist(); renderHabits(key);
+  const ck=`${key}_${hid}_${day}`; hchecks[ck]=!hchecks[ck]; renderHabits(key); scheduleSave();
 }
 function delHabit(key,hid) {
-  if(habits[key]){habits[key]=habits[key].filter(h=>h.id!==hid); persist(); renderHabits(key);}
+  if(habits[key]){habits[key]=habits[key].filter(h=>h.id!==hid); renderHabits(key); scheduleSave();}
 }
 function renderHabits(key) {
   const el=document.getElementById('hg-'+key); if(!el)return;
@@ -664,10 +713,7 @@ function renderHabits(key) {
     <div class="habit-row">
       <span class="hname">${h.name}</span>
       <div class="hchecks">
-        ${DAYS_ABBR.map((_,i)=>{
-          const ck=`${key}_${h.id}_${i}`;
-          return `<div class="hcheck ${hchecks[ck]?'done':''}" onclick="toggleHabit('${key}','${h.id}',${i})">${hchecks[ck]?'✓':''}</div>`;
-        }).join('')}
+        ${DAYS_ABBR.map((_,i)=>{const ck=`${key}_${h.id}_${i}`;return`<div class="hcheck ${hchecks[ck]?'done':''}" onclick="toggleHabit('${key}','${h.id}',${i})">${hchecks[ck]?'✓':''}</div>`;}).join('')}
       </div>
       <button class="hdel" onclick="delHabit('${key}','${h.id}')">✕</button>
     </div>`).join('');
@@ -676,9 +722,7 @@ function renderHabits(key) {
 // ── CALENDAR ──
 function renderCal(id) {
   const el=document.getElementById(id); if(!el)return;
-  const first=new Date(calY,calM,1).getDay();
-  const dIn=new Date(calY,calM+1,0).getDate();
-  const now=new Date();
+  const first=new Date(calY,calM,1).getDay(), dIn=new Date(calY,calM+1,0).getDate(), now=new Date();
   el.innerHTML=`
     <div class="mcal-header">
       <button class="carr" onclick="calNav(-1)">‹</button>
@@ -689,52 +733,43 @@ function renderCal(id) {
     <div class="mcal-grid">
       ${Array(first).fill('<div class="mcell other"></div>').join('')}
       ${Array.from({length:dIn},(_,i)=>{
-        const d=i+1;
-        const isTd=calY===now.getFullYear()&&calM===now.getMonth()&&d===now.getDate();
-        return `<div class="mcell ${isTd?'today':''}">${d}</div>`;
+        const d=i+1,isTd=calY===now.getFullYear()&&calM===now.getMonth()&&d===now.getDate();
+        return`<div class="mcell ${isTd?'today':''}">${d}</div>`;
       }).join('')}
     </div>`;
 }
-function calNav(dir) {
-  calM+=dir;
-  if(calM>11){calM=0;calY++;} if(calM<0){calM=11;calY--;}
-  renderCal('cal-social'); renderCal('cal-work');
-}
+function calNav(dir){calM+=dir;if(calM>11){calM=0;calY++;}if(calM<0){calM=11;calY--;}renderCal('cal-social');renderCal('cal-work');}
 
 // ── POMODORO ──
 const CIRC=345.4;
-function updatePomo() {
+function updatePomo(){
   const m=Math.floor(pRem/60),s=pRem%60;
   document.getElementById('pdisp').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  const pct=1-(pRem/pPeriod);
-  document.getElementById('pring').style.strokeDashoffset=CIRC*(1-pct);
+  document.getElementById('pring').style.strokeDashoffset=CIRC*(1-(pRem/pPeriod));
 }
-function renderPomoDots() {
-  const el=document.getElementById('pdots'); if(!el)return;
+function renderPomoDots(){
+  const el=document.getElementById('pdots');if(!el)return;
   el.innerHTML=Array.from({length:4},(_,i)=>`<div class="pdot ${i<(pomoSess%4)?'done':''}"></div>`).join('');
 }
-function setMode(mode,btn) {
+function setMode(mode,btn){
   if(pRunning)return;
   pMode=mode;
-  document.querySelectorAll('.pmode').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  document.querySelectorAll('.pmode').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
   const lbls={focus:'Focus',short:'Short Break',long:'Long Break'};
   document.getElementById('pmodelbl').textContent=lbls[mode];
-  pPeriod=pRem=POMO_T[mode]; updatePomo();
+  pPeriod=pRem=POMO_T[mode];updatePomo();
 }
-function pomoToggle() {
-  if(pRunning){
-    clearInterval(pIv); pRunning=false;
-    document.getElementById('pbtn').textContent='▶ Start';
-  } else {
-    pRunning=true; document.getElementById('pbtn').textContent='⏸ Pause';
+function pomoToggle(){
+  if(pRunning){clearInterval(pIv);pRunning=false;document.getElementById('pbtn').textContent='▶ Start';}
+  else{
+    pRunning=true;document.getElementById('pbtn').textContent='⏸ Pause';
     pIv=setInterval(()=>{
       if(pRem<=0){
-        clearInterval(pIv); pRunning=false;
-        document.getElementById('pbtn').textContent='▶ Start';
-        if(pMode==='focus'){pomoSess++; localStorage.setItem('mp3_pomo',pomoSess); renderPomoDots();}
-        pRem=pPeriod; updatePomo(); return;
+        clearInterval(pIv);pRunning=false;document.getElementById('pbtn').textContent='▶ Start';
+        if(pMode==='focus'){pomoSess++;scheduleSave();renderPomoDots();}
+        pRem=pPeriod;updatePomo();return;
       }
-      pRem--; updatePomo();
+      pRem--;updatePomo();
     },1000);
   }
 }
