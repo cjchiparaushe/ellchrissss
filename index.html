@@ -7,16 +7,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#f6efe4; --paper:#fbf6ee; --paper2:#efe5d6;
-  --ink:#392e20; --ink-muted:#8a7256; --ink-light:#c2ad94;
-  --accent:#d99a6c; --star:#e0a857; --sage:#b7cdb0; --sage-d:#8fae84;
-  --f1:#a9c4c9; --f2:#e3b9a4; --f3:#e7c873;
-  --f4:#c9b6cf; --f5:#f0a8a4; --f6:#9fc2b8;
+  --bg:#fff7f1; --paper:#fffdf8; --paper2:#f4eadf;
+  --ink:#2d2718; --ink-muted:#746b41; --ink-light:#b7aa7a;
+  --accent:#fb89a6; --accent-soft:#ffd6df; --star:#e2bf38;
+  --sage:#b6b62f; --sage-d:#849805; --deep:#1f2a13;
+  --f1:#fb89a6; --f2:#b6b62f; --f3:#849805;
+  --f4:#f5bfd0; --f5:#dedf72; --f6:#a7b45a;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
   font-family:'DM Sans',sans-serif;
-  background:#2e1f1c; min-height:100vh;
+  background:linear-gradient(135deg,#261b19 0%,#332317 35%,#38420f 100%); min-height:100vh;
   display:flex; flex-direction:column; align-items:center;
   padding:2.5rem 1rem 5rem;
   position:relative;
@@ -26,10 +27,10 @@ body{
 body::before{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
-    radial-gradient(circle at 12% 18%, rgba(183,205,176,0.20), transparent 38%),
-    radial-gradient(circle at 88% 12%, rgba(240,168,164,0.16), transparent 36%),
-    radial-gradient(circle at 90% 85%, rgba(169,196,201,0.16), transparent 42%),
-    radial-gradient(circle at 8% 90%, rgba(217,154,108,0.12), transparent 40%);
+    radial-gradient(circle at 12% 16%, rgba(251,137,166,0.25), transparent 35%),
+    radial-gradient(circle at 86% 13%, rgba(182,182,47,0.24), transparent 36%),
+    radial-gradient(circle at 88% 86%, rgba(132,152,5,0.24), transparent 42%),
+    radial-gradient(circle at 8% 88%, rgba(255,214,223,0.16), transparent 40%);
 }
 /* floating cute decorations */
 .bg-deco{position:fixed;font-size:2.2rem;opacity:0.16;pointer-events:none;z-index:0;animation:bgfloat 14s ease-in-out infinite;filter:saturate(0.9);}
@@ -50,7 +51,7 @@ body::after{
 /* ── LOGIN SCREEN ── */
 #login-screen{
   position:fixed;inset:0;z-index:500;
-  background:#2e1f1c;
+  background:linear-gradient(135deg,#261b19 0%,#332317 35%,#38420f 100%);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:2rem;
 }
@@ -259,7 +260,7 @@ input::placeholder,textarea::placeholder{color:var(--ink-light);}
 
 /* loading overlay */
 #loading-overlay{
-  position:fixed;inset:0;z-index:400;background:#2e1f1c;
+  position:fixed;inset:0;z-index:400;background:linear-gradient(135deg,#261b19 0%,#332317 35%,#38420f 100%);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;
 }
 #loading-overlay.hidden{display:none;}
@@ -268,6 +269,37 @@ input::placeholder,textarea::placeholder{color:var(--ink-light);}
 .loading-spinner{width:32px;height:32px;border:3px solid rgba(250,247,242,0.15);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-size:0.78rem;color:var(--ink-light);letter-spacing:0.08em;}
+/* selected-day polish */
+.clabel-flex{display:flex;align-items:center;justify-content:space-between;gap:0.7rem;}
+.date-badge{font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;background:var(--accent-soft);color:var(--ink);border:1px solid rgba(251,137,166,0.35);border-radius:999px;padding:0.18rem 0.5rem;white-space:nowrap;}
+.day-panel-header{display:flex;align-items:center;justify-content:space-between;gap:0.5rem;margin-bottom:0.45rem;}
+.date-tiny{font-size:0.62rem;color:var(--ink-muted);background:var(--bg);border-radius:999px;padding:0.18rem 0.5rem;}
+.diary-add{align-items:center;}
+.upload-status{flex:1 1 100%;font-size:0.68rem;color:var(--ink-muted);min-height:1em;}
+.day-linked-note{font-size:0.68rem;color:var(--ink-muted);margin:-0.15rem 0 0.65rem;font-style:italic;}
+.polaroid.featured{width:128px;}
+.polaroid.featured img,.polaroid.featured .doc-thumb{height:96px;}
+.mcell.has-diary::after{content:'✿';position:absolute;top:1px;right:3px;font-size:0.48rem;color:var(--accent);}
+.mcell.has-note{box-shadow:inset 0 -2px 0 rgba(251,137,166,0.45);}
+
+@media (max-width: 760px){
+  body{padding:1.1rem 0.65rem 3rem;}
+  .top-bar{margin-bottom:1.4rem;gap:0.8rem;align-items:flex-start;}
+  .logo{font-size:1.55rem;}
+  .top-right{gap:0.45rem;flex-wrap:wrap;justify-content:flex-end;}
+  .date-chip{font-size:0.58rem;padding:0.35rem 0.7rem;}
+  .folder-tabs{overflow-x:auto;padding-bottom:0.1rem;}
+  .ftab{min-width:118px;font-size:0.58rem;padding:0.65rem 0.45rem 0.9rem;}
+  .folder-body{border-radius:0 0 18px 18px;min-height:520px;}
+  .content-area{padding:0.6rem 0.8rem 7.5rem;}
+  .grid-2{grid-template-columns:1fr;gap:0.95rem;}
+  .pcard{padding:1rem;}
+  .folder-sticker,.sparkle,.deco-clip,.deco-pen,.folder-bg-title{display:none;}
+  .diary-grid{max-height:none;}
+  .polaroid{width:112px;}
+  .polaroid img,.doc-thumb{height:82px;}
+}
+
 </style>
 </head>
 <body>
@@ -356,17 +388,19 @@ input::placeholder,textarea::placeholder{color:var(--ink-light);}
           </div>
         </div>
         <div class="pcard clip">
-          <div class="clabel">Visual Diary · Photos & Files</div>
+          <div class="clabel clabel-flex">Visual Diary · Photos & Files<span class="date-badge" id="diary-date-social">Today</span></div>
           <div class="diary-grid" id="diary-social"></div>
           <div class="diary-add">
-            <input type="text" id="idc-social" placeholder="Caption (optional)...">
-            <input type="file" id="idf-social" accept="image/*,.pdf,.doc,.docx,.txt" onchange="handleFile('social')">
+            <input type="text" id="idc-social" placeholder="Caption for selected day...">
+            <input type="file" id="idf-social" accept="image/*,.pdf,.doc,.docx,.txt" multiple onchange="handleFile('social')">
+            <div class="upload-status" id="upload-status-social"></div>
           </div>
         </div>
       </div>
       <div class="grid-1">
         <div class="pcard stripe" id="stripe-1">
-          <div class="clabel">Notes · People & Plans</div>
+          <div class="clabel clabel-flex">Notes · People & Plans<span class="date-badge" id="note-date-social">Today</span></div>
+          <div class="day-linked-note">This note changes with the calendar date selected above.</div>
           <textarea class="lined" id="note-social" placeholder="Jot down plans, ideas, people to catch up with..."></textarea>
         </div>
       </div>
@@ -423,17 +457,19 @@ input::placeholder,textarea::placeholder{color:var(--ink-light);}
           </div>
         </div>
         <div class="pcard clip">
-          <div class="clabel">Visual Diary · Photos & Files</div>
+          <div class="clabel clabel-flex">Visual Diary · Photos & Files<span class="date-badge" id="diary-date-academic">Today</span></div>
           <div class="diary-grid" id="diary-academic"></div>
           <div class="diary-add">
-            <input type="text" id="idc-academic" placeholder="Caption (optional)...">
-            <input type="file" id="idf-academic" accept="image/*,.pdf,.doc,.docx,.txt" onchange="handleFile('academic')">
+            <input type="text" id="idc-academic" placeholder="Caption for selected day...">
+            <input type="file" id="idf-academic" accept="image/*,.pdf,.doc,.docx,.txt" multiple onchange="handleFile('academic')">
+            <div class="upload-status" id="upload-status-academic"></div>
           </div>
         </div>
       </div>
       <div class="grid-1">
         <div class="pcard stripe" id="stripe-2">
-          <div class="clabel">Study Notes</div>
+          <div class="clabel clabel-flex">Study Notes<span class="date-badge" id="note-date-academic">Today</span></div>
+          <div class="day-linked-note">This note changes with the calendar date selected above.</div>
           <textarea class="lined" id="note-academic" placeholder="Class notes, formulas, key concepts..."></textarea>
         </div>
       </div>
@@ -471,17 +507,19 @@ input::placeholder,textarea::placeholder{color:var(--ink-light);}
           </div>
         </div>
         <div class="pcard clip">
-          <div class="clabel">Visual Diary · Photos & Files</div>
+          <div class="clabel clabel-flex">Visual Diary · Photos & Files<span class="date-badge" id="diary-date-work">Today</span></div>
           <div class="diary-grid" id="diary-work"></div>
           <div class="diary-add">
-            <input type="text" id="idc-work" placeholder="Caption (optional)...">
-            <input type="file" id="idf-work" accept="image/*,.pdf,.doc,.docx,.txt" onchange="handleFile('work')">
+            <input type="text" id="idc-work" placeholder="Caption for selected day...">
+            <input type="file" id="idf-work" accept="image/*,.pdf,.doc,.docx,.txt" multiple onchange="handleFile('work')">
+            <div class="upload-status" id="upload-status-work"></div>
           </div>
         </div>
       </div>
       <div class="grid-1">
         <div class="pcard stripe" id="stripe-3">
-          <div class="clabel">Work Notes · Ideas & Follow-ups</div>
+          <div class="clabel clabel-flex">Work Notes · Ideas & Follow-ups<span class="date-badge" id="note-date-work">Today</span></div>
+          <div class="day-linked-note">This note changes with the calendar date selected above.</div>
           <textarea class="lined" id="note-work" placeholder="Meeting notes, ideas, action items..."></textarea>
         </div>
       </div>
@@ -516,17 +554,19 @@ input::placeholder,textarea::placeholder{color:var(--ink-light);}
           </div>
         </div>
         <div class="pcard clip">
-          <div class="clabel">Visual Diary · Progress Pics & Files</div>
+          <div class="clabel clabel-flex">Visual Diary · Progress Pics & Files<span class="date-badge" id="diary-date-gym">Today</span></div>
           <div class="diary-grid" id="diary-gym"></div>
           <div class="diary-add">
-            <input type="text" id="idc-gym" placeholder="Caption (optional)...">
-            <input type="file" id="idf-gym" accept="image/*,.pdf,.doc,.docx,.txt" onchange="handleFile('gym')">
+            <input type="text" id="idc-gym" placeholder="Caption for selected day...">
+            <input type="file" id="idf-gym" accept="image/*,.pdf,.doc,.docx,.txt" multiple onchange="handleFile('gym')">
+            <div class="upload-status" id="upload-status-gym"></div>
           </div>
         </div>
       </div>
       <div class="grid-1">
         <div class="pcard stripe" id="stripe-4">
-          <div class="clabel">Gym Notes · Goals & PRs</div>
+          <div class="clabel clabel-flex">Gym Notes · Goals & PRs<span class="date-badge" id="note-date-gym">Today</span></div>
+          <div class="day-linked-note">This note changes with the calendar date selected above.</div>
           <textarea class="lined" id="note-gym" placeholder="Goals, personal records, programmes..."></textarea>
         </div>
       </div>
@@ -561,17 +601,19 @@ input::placeholder,textarea::placeholder{color:var(--ink-light);}
           </div>
         </div>
         <div class="pcard clip">
-          <div class="clabel">Visual Diary · Photos & Files</div>
+          <div class="clabel clabel-flex">Visual Diary · Photos & Files<span class="date-badge" id="diary-date-health">Today</span></div>
           <div class="diary-grid" id="diary-health"></div>
           <div class="diary-add">
-            <input type="text" id="idc-health" placeholder="Caption (optional)...">
-            <input type="file" id="idf-health" accept="image/*,.pdf,.doc,.docx,.txt" onchange="handleFile('health')">
+            <input type="text" id="idc-health" placeholder="Caption for selected day...">
+            <input type="file" id="idf-health" accept="image/*,.pdf,.doc,.docx,.txt" multiple onchange="handleFile('health')">
+            <div class="upload-status" id="upload-status-health"></div>
           </div>
         </div>
       </div>
       <div class="grid-1">
         <div class="pcard stripe" id="stripe-5">
-          <div class="clabel">Health Notes · Mood & Wellbeing</div>
+          <div class="clabel clabel-flex">Health Notes · Mood & Wellbeing<span class="date-badge" id="note-date-health">Today</span></div>
+          <div class="day-linked-note">This note changes with the calendar date selected above.</div>
           <textarea class="lined" id="note-health" placeholder="How are you feeling? Energy, mood, symptoms..."></textarea>
         </div>
       </div>
@@ -602,17 +644,19 @@ input::placeholder,textarea::placeholder{color:var(--ink-light);}
           </div>
         </div>
         <div class="pcard clip">
-          <div class="clabel">Visual Diary · Photos & Files</div>
+          <div class="clabel clabel-flex">Visual Diary · Photos & Files<span class="date-badge" id="diary-date-hobbies">Today</span></div>
           <div class="diary-grid" id="diary-hobbies"></div>
           <div class="diary-add">
-            <input type="text" id="idc-hobbies" placeholder="Caption (optional)...">
-            <input type="file" id="idf-hobbies" accept="image/*,.pdf,.doc,.docx,.txt" onchange="handleFile('hobbies')">
+            <input type="text" id="idc-hobbies" placeholder="Caption for selected day...">
+            <input type="file" id="idf-hobbies" accept="image/*,.pdf,.doc,.docx,.txt" multiple onchange="handleFile('hobbies')">
+            <div class="upload-status" id="upload-status-hobbies"></div>
           </div>
         </div>
       </div>
       <div class="grid-1">
         <div class="pcard stripe" id="stripe-6">
-          <div class="clabel">Hobby Notes · References & Links</div>
+          <div class="clabel clabel-flex">Hobby Notes · References & Links<span class="date-badge" id="note-date-hobbies">Today</span></div>
+          <div class="day-linked-note">This note changes with the calendar date selected above.</div>
           <textarea class="lined" id="note-hobbies" placeholder="Project notes, tutorials, references..."></textarea>
         </div>
       </div>
@@ -628,6 +672,8 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as fbSignOut, onA
   from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
 import { getFirestore, doc, onSnapshot, setDoc, getDoc }
   from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject }
+  from "https://www.gstatic.com/firebasejs/12.12.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAZnnkOB8NcW0wtHt9yO5KG1fzPyYD1sco",
@@ -642,6 +688,7 @@ const firebaseConfig = {
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
+const storage = getStorage(app);
 const provider = new GoogleAuthProvider();
 
 let uid = null;
@@ -650,6 +697,20 @@ let unsubscribe = null;
 // Expose to global scope
 window._fbSignIn = () => signInWithPopup(auth, provider);
 window._fbSignOut = () => fbSignOut(auth);
+window._uploadFileToStorage = async (file, folder, dayKey) => {
+  if (!uid) throw new Error('Please sign in first.');
+  const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const fullPath = `users/${uid}/planner/${folder}/${dayKey}/${Date.now()}-${cleanName}`;
+  const ref = storageRef(storage, fullPath);
+  await uploadBytes(ref, file, { contentType: file.type || 'application/octet-stream' });
+  const url = await getDownloadURL(ref);
+  return { url, path: fullPath };
+};
+window._deleteFromStorage = async (fullPath) => {
+  if (!fullPath) return;
+  try { await deleteObject(storageRef(storage, fullPath)); }
+  catch (e) { console.warn('Could not delete storage file', e); }
+};
 
 // ── AUTH STATE ──
 onAuthStateChanged(auth, async user => {
@@ -716,7 +777,7 @@ function setSyncStatus(state, text) {
 
 <!-- APP LOGIC -->
 <script>
-const FCOLORS = {1:'#a9c4c9',2:'#e3b9a4',3:'#e7c873',4:'#c9b6cf',5:'#f0a8a4',6:'#9fc2b8'};
+const FCOLORS = {1:'#fb89a6',2:'#b6b62f',3:'#849805',4:'#f5bfd0',5:'#dedf72',6:'#a7b45a'};
 const FMETA = {
   1:{eye:'Section 01 · Social',body:'Plans, hangouts & people',title:'Social'},
   2:{eye:'Section 02 · Academic',body:'Assignments, study & goals',title:'Academic'},
@@ -785,6 +846,7 @@ window.onload = () => {
       const ds = ensureSelectedDay(k);
       if (!notes[k]) notes[k]={};
       notes[k][ds]=el.value;
+      renderCal(k);
       scheduleSave();
     });
   });
@@ -807,7 +869,8 @@ function switchFolder(n, el) {
   // Update stripe cards
   for(let i=1;i<=6;i++){const s=document.getElementById('stripe-'+i);if(s)s.style.borderTopColor=FCOLORS[i];}
   FOLDER_KEYS.forEach(k=>{
-    renderTasks(k); renderHabits(k); renderCal(k); renderDayPanel(k); renderDiary(k);
+    ensureSelectedDay(k);
+    renderTasks(k); renderHabits(k); renderCal(k); renderDayPanel(k); renderDiary(k); loadNoteForDay(k);
   });
   updateWorkProg();
 }
@@ -906,6 +969,7 @@ function renderAll(folder){
 
 function renderCal(folder) {
   const el=document.getElementById('cal-'+folder); if(!el)return;
+  ensureSelectedDay(folder);
   const first=new Date(calY,calM,1).getDay(), dIn=new Date(calY,calM+1,0).getDate(), now=new Date();
   el.innerHTML=`
     <div class="mcal-header">
@@ -922,7 +986,9 @@ function renderCal(folder) {
         const isTd=calY===now.getFullYear()&&calM===now.getMonth()&&d===now.getDate();
         const isSel=selectedDay[folder]===ds;
         const hasEv=!!(events[folder] && events[folder][ds] && events[folder][ds].length);
-        return`<div class="mcell ${isTd?'today':''} ${isSel?'selected':''}" onclick="selectDay('${folder}','${ds}')">${d}${hasEv?'<span class="edot"></span>':''}</div>`;
+        const hasDiary=!!(diary[folder] && diary[folder][ds] && diary[folder][ds].length);
+        const hasNote=!!(notes[folder] && notes[folder][ds]);
+        return`<div class="mcell ${isTd?'today':''} ${isSel?'selected':''} ${hasDiary?'has-diary':''} ${hasNote?'has-note':''}" onclick="selectDay('${folder}','${ds}')">${d}${hasEv?'<span class="edot"></span>':''}</div>`;
       }).join('')}
     </div>`;
 }
@@ -941,13 +1007,12 @@ function selectDay(folder,ds){
 }
 function renderDayPanel(folder){
   const el=document.getElementById('dayp-'+folder); if(!el)return;
-  const ds=selectedDay[folder];
-  if(!ds){el.innerHTML='<div class="empty-state">Tap a date to add plans ✦</div>';return;}
+  const ds=ensureSelectedDay(folder);
   const list=(events[folder] && events[folder][ds]) || [];
   const d=new Date(ds+'T00:00:00');
   const label=d.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'});
   el.innerHTML=`
-    <div class="dp-date">${label}</div>
+    <div class="day-panel-header"><div class="dp-date">${label}</div><button class="btn btn-sm" onclick="goToday('${folder}')">Today</button></div>
     <ul class="task-list">
       ${list.length?list.map(e=>`
         <li class="task-item ${e.done?'done':''}">
@@ -983,59 +1048,107 @@ function delEvent(folder,ds,id){
   }
 }
 
-// ── VISUAL DIARY (photos & files) ──
-function handleFile(folder){
-  const inp=document.getElementById('idf-'+folder);
-  const capEl=document.getElementById('idc-'+folder);
-  const file=inp.files[0]; if(!file)return;
-  const caption=capEl.value.trim();
-
-  if(file.size>4*1024*1024){
-    alert('That file is a bit large — please pick something under 4MB.');
-    inp.value='';
-    return;
-  }
-
-  if(file.type.startsWith('image/')){
+// ── VISUAL DIARY (photos & files, linked to the selected calendar date) ──
+function setUploadStatus(folder, text){
+  const el=document.getElementById('upload-status-'+folder);
+  if(el) el.textContent=text || '';
+}
+function fileToDataURL(file){
+  return new Promise((resolve,reject)=>{
     const reader=new FileReader();
+    reader.onload=e=>resolve(e.target.result);
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+function compressImageFile(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=reject;
     reader.onload=e=>{
       const img=new Image();
+      img.onerror=reject;
       img.onload=()=>{
-        const maxW=600;
+        const maxW=1200;
         const scale=Math.min(1, maxW/img.width);
         const canvas=document.createElement('canvas');
-        canvas.width=img.width*scale;
-        canvas.height=img.height*scale;
+        canvas.width=Math.round(img.width*scale);
+        canvas.height=Math.round(img.height*scale);
         canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
-        const dataUrl=canvas.toDataURL('image/jpeg',0.75);
-        addDiaryItem(folder,{type:'image',data:dataUrl,caption,name:file.name});
+        canvas.toBlob(blob=>{
+          if(!blob){reject(new Error('Could not process image.'));return;}
+          const clean=file.name.replace(/\.[^.]+$/,'') || 'photo';
+          resolve(new File([blob], clean + '.jpg', {type:'image/jpeg'}));
+        }, 'image/jpeg', 0.82);
       };
       img.src=e.target.result;
     };
     reader.readAsDataURL(file);
-  } else {
-    const reader=new FileReader();
-    reader.onload=e=>{
-      addDiaryItem(folder,{type:'doc',data:e.target.result,caption,name:file.name});
-    };
-    reader.readAsDataURL(file);
+  });
+}
+async function uploadDiaryFile(file, folder, ds){
+  const isImage=file.type.startsWith('image/');
+  const isDoc=!isImage;
+  if(file.size>25*1024*1024){
+    alert(`${file.name} is too large — please choose something under 25MB.`);
+    return null;
+  }
+  let uploadFile=file;
+  if(isImage) uploadFile=await compressImageFile(file);
+
+  // Best version: Firebase Storage stores the real photo/file and Firestore stores only the link.
+  if(window._uploadFileToStorage){
+    const saved=await window._uploadFileToStorage(uploadFile, folder, ds);
+    return {type:isImage?'image':'doc',url:saved.url,path:saved.path,caption:'',name:file.name};
+  }
+
+  // Fallback if Storage is unavailable while testing locally.
+  const data=await fileToDataURL(uploadFile);
+  return {type:isImage?'image':'doc',data,caption:'',name:file.name};
+}
+async function handleFile(folder){
+  const inp=document.getElementById('idf-'+folder);
+  const capEl=document.getElementById('idc-'+folder);
+  const files=Array.from(inp.files||[]); if(!files.length)return;
+  const ds=ensureSelectedDay(folder);
+  const caption=capEl.value.trim();
+  setUploadStatus(folder, `Uploading ${files.length} item${files.length>1?'s':''} for ${formatDateLabel(ds)}...`);
+  try{
+    for(const file of files){
+      const item=await uploadDiaryFile(file, folder, ds);
+      if(!item) continue;
+      item.caption=caption;
+      addDiaryItem(folder,item,false,ds);
+    }
+    renderDiary(folder);
+    renderCal(folder);
+    scheduleSave();
+    setUploadStatus(folder, `Saved for ${formatDateLabel(ds)} ✦`);
+    setTimeout(()=>setUploadStatus(folder,''),1800);
+  }catch(e){
+    console.error(e);
+    setUploadStatus(folder,'Upload failed — check Firebase Storage rules.');
   }
   inp.value=''; capEl.value='';
 }
-function addDiaryItem(folder,item){
-  const ds=ensureSelectedDay(folder);
+function addDiaryItem(folder,item,doSave=true,targetDay=null){
+  const ds=targetDay || ensureSelectedDay(folder);
   if(!diary[folder])diary[folder]={};
   if(!diary[folder][ds])diary[folder][ds]=[];
-  item.id=Date.now()+'';
+  item.id=Date.now()+Math.random().toString(16).slice(2);
   item.rot=(Math.random()*6-3).toFixed(1);
   diary[folder][ds].unshift(item);
-  renderDiary(folder); scheduleSave();
+  renderDiary(folder); renderCal(folder);
+  if(doSave) scheduleSave();
 }
 function delDiaryItem(folder,id){
   const ds=ensureSelectedDay(folder);
   if(diary[folder] && diary[folder][ds]){
+    const item=diary[folder][ds].find(d=>d.id===id);
+    if(item?.path && window._deleteFromStorage) window._deleteFromStorage(item.path);
     diary[folder][ds]=diary[folder][ds].filter(d=>d.id!==id);
-    renderDiary(folder); scheduleSave();
+    if(!diary[folder][ds].length)delete diary[folder][ds];
+    renderDiary(folder); renderCal(folder); scheduleSave();
   }
 }
 function renderDiary(folder){
@@ -1044,15 +1157,17 @@ function renderDiary(folder){
   const lbl=document.getElementById('diary-date-'+folder);
   if(lbl) lbl.textContent=formatDateLabel(ds);
   const list=(diary[folder] && diary[folder][ds]) || [];
-  if(!list.length){el.innerHTML='<div class="empty-state">Pin photos & files for this day ✦</div>';return;}
-  el.innerHTML=list.map(it=>`
-    <div class="polaroid" style="transform:rotate(${it.rot}deg)">
+  if(!list.length){el.innerHTML=`<div class="empty-state">Pin photos & files for ${formatDateLabel(ds)} ✦</div>`;return;}
+  el.innerHTML=list.map((it,i)=>{
+    const src=it.url || it.data || '';
+    return `
+    <div class="polaroid ${i===0?'featured':''}" style="transform:rotate(${it.rot}deg)">
       <button class="pdel" onclick="delDiaryItem('${folder}','${it.id}')">✕</button>
       ${it.type==='image'
-        ? `<img src="${it.data}" alt="${it.caption||it.name||''}">`
-        : `<a class="doc-thumb" href="${it.data}" download="${it.name}">📄<span>${it.name}</span></a>`}
+        ? `<img src="${src}" alt="${it.caption||it.name||''}">`
+        : `<a class="doc-thumb" href="${src}" target="_blank" rel="noopener" download="${it.name||'file'}">📄<span>${it.name||'file'}</span></a>`}
       ${it.caption?`<div class="pcap">${it.caption}</div>`:''}
-    </div>`).join('');
+    </div>`}).join('');
 }
 
 // ── POMODORO ──
