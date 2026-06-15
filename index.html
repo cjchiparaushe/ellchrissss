@@ -823,9 +823,13 @@ function getCleanDiaryForSave() {
   Object.keys(diary || {}).forEach(folder => {
     Object.keys(diary[folder] || {}).forEach(ds => {
       const items = (diary[folder][ds] || [])
-        .filter(item => !item.uploading && (item.url || item.data || item.path))
+        // Save only real URLs or small Firestore-safe previews. Never save blob: local preview URLs.
+        .filter(item => item && (item.url || item.data || item.path))
         .map(item => {
-          const { localUrl, uploading, ...safeItem } = item;
+          const { localUrl, uploading, errorMessage, ...safeItem } = item;
+          // If another device loads while this browser is still uploading, show the saved preview,
+          // not a permanently stuck "Uploading..." label.
+          safeItem.uploading = false;
           return safeItem;
         });
 
@@ -1103,50 +1107,78 @@ function safeHTML(value=''){
     "'":'&#039;'
   }[ch]));
 }
-function compressImageFile(file){
+function withTimeout(promise, ms, label){
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`${label} took too long. Check your internet/Firebase Storage rules.`)), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+}
+
+function makeImageFileAndData(file, maxW=900, quality=0.68){
   return new Promise((resolve,reject)=>{
     const reader=new FileReader();
-    reader.onerror=reject;
+    reader.onerror=()=>reject(new Error('Could not read image.'));
     reader.onload=e=>{
       const img=new Image();
-      img.onerror=reject;
+      img.onerror=()=>reject(new Error('Could not load image.'));
       img.onload=()=>{
-        const maxW=900;
-        const scale=Math.min(1, maxW/img.width);
-        const canvas=document.createElement('canvas');
-        canvas.width=Math.round(img.width*scale);
-        canvas.height=Math.round(img.height*scale);
-        canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
-        canvas.toBlob(blob=>{
-          if(!blob){reject(new Error('Could not process image.'));return;}
-          const clean=file.name.replace(/\.[^.]+$/,'') || 'photo';
-          resolve(new File([blob], clean + '.jpg', {type:'image/jpeg'}));
-        }, 'image/jpeg', 0.68);
+        try{
+          const scale=Math.min(1, maxW/img.width);
+          const canvas=document.createElement('canvas');
+          canvas.width=Math.max(1, Math.round(img.width*scale));
+          canvas.height=Math.max(1, Math.round(img.height*scale));
+          canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+          canvas.toBlob(blob=>{
+            if(!blob){reject(new Error('Could not process image.'));return;}
+            const clean=file.name.replace(/\.[^.]+$/,'') || 'photo';
+            const outFile=new File([blob], clean + '.jpg', {type:'image/jpeg'});
+            const data=canvas.toDataURL('image/jpeg', quality);
+            resolve({file:outFile, data});
+          }, 'image/jpeg', quality);
+        }catch(err){ reject(err); }
       };
       img.src=e.target.result;
     };
     reader.readAsDataURL(file);
   });
 }
+
+async function makeTinyPreview(file){
+  const isImage=file.type.startsWith('image/');
+  if(!isImage) return null;
+  // Small enough to sync in Firestore as a preview if Firebase Storage is slow/unavailable.
+  const made=await withTimeout(makeImageFileAndData(file, 520, 0.58), 18000, 'Image preview');
+  return made.data;
+}
+
+async function compressImageFile(file){
+  const made=await withTimeout(makeImageFileAndData(file, 900, 0.68), 22000, 'Image compression');
+  return made.file;
+}
+
 async function uploadDiaryFile(file, folder, ds){
   const isImage=file.type.startsWith('image/');
   if(file.size>25*1024*1024){
     alert(`${file.name} is too large — please choose something under 25MB.`);
     return null;
   }
+
   let uploadFile=file;
   if(isImage) uploadFile=await compressImageFile(file);
 
-  // Best version: Firebase Storage stores the real photo/file and Firestore stores only the link.
+  // Firebase Storage stores the real image/file. The timeout prevents the card
+  // from being stuck on "Uploading..." forever if Storage rules/CORS/internet fail.
   if(window._uploadFileToStorage){
-    const saved=await window._uploadFileToStorage(uploadFile, folder, ds);
-    return {type:isImage?'image':'doc',url:saved.url,path:saved.path,caption:'',name:file.name,dayKey:ds};
+    const saved=await withTimeout(window._uploadFileToStorage(uploadFile, folder, ds), 45000, 'Firebase Storage upload');
+    return {type:isImage?'image':'doc',url:saved.url,path:saved.path,caption:'',name:file.name,dayKey:ds,uploadError:false};
   }
 
   // Fallback if Storage is unavailable while testing locally.
   const data=await fileToDataURL(uploadFile);
-  return {type:isImage?'image':'doc',data,caption:'',name:file.name,dayKey:ds};
+  return {type:isImage?'image':'doc',data,caption:'',name:file.name,dayKey:ds,uploadError:false};
 }
+
 async function handleFile(folder){
   const inp=document.getElementById('idf-'+folder);
   const capEl=document.getElementById('idc-'+folder);
@@ -1173,10 +1205,11 @@ async function handleFile(folder){
     const item={
       id:'local-'+Date.now()+Math.random().toString(16).slice(2),
       type:isImage?'image':'doc',
-      localUrl:URL.createObjectURL(file),
+      localUrl:isImage ? URL.createObjectURL(file) : '',
       caption,
       name:file.name,
       uploading:true,
+      uploadError:false,
       dayKey:ds,
       rot:(Math.random()*6-3).toFixed(1)
     };
@@ -1195,56 +1228,100 @@ async function handleFile(folder){
   selectedDay[folder]=ds;
   renderDiary(folder);
   renderCal(folder);
-  setUploadStatus(folder, `Uploading ${placeholders.length} item${placeholders.length>1?'s':''} for ${formatDateLabel(ds)}...`);
+  setUploadStatus(folder, `Preparing ${placeholders.length} item${placeholders.length>1?'s':''} for ${formatDateLabel(ds)}...`);
 
   const results=await Promise.allSettled(placeholders.map(async ({file,item})=>{
-    const uploaded=await uploadDiaryFile(file, folder, ds);
-    if(!uploaded) throw new Error('Upload skipped.');
-
     if(!diary[folder])diary[folder]={};
     if(!diary[folder][ds])diary[folder][ds]=[];
 
-    // If a remote Firestore snapshot refreshed the page state during upload,
-    // re-attach the uploaded item to its original date instead of losing it.
     let target=diary[folder][ds].find(existing=>existing.id===item.id);
     if(!target){
       diary[folder][ds].unshift(item);
       target=item;
     }
 
-    Object.assign(target, uploaded, {
-      id:item.id,
-      caption,
-      uploading:false,
-      dayKey:ds,
-      rot:item.rot
-    });
-
-    if(item.localUrl){
-      URL.revokeObjectURL(item.localUrl);
-      delete item.localUrl;
+    // First save a tiny preview to the correct day. This prevents lost photos if Storage is slow.
+    if(file.type.startsWith('image/')){
+      try{
+        target.data=await makeTinyPreview(file);
+        target.type='image';
+        target.dayKey=ds;
+        renderDiary(folder);
+        renderCal(folder);
+        await saveNow();
+      }catch(previewErr){
+        console.warn('Preview failed:', previewErr);
+      }
     }
 
-    renderDiary(folder);
-    renderCal(folder);
+    setUploadStatus(folder, `Uploading to cloud storage for ${formatDateLabel(ds)}...`);
+
+    try{
+      const uploaded=await uploadDiaryFile(file, folder, ds);
+      if(!uploaded) throw new Error('Upload skipped.');
+
+      target=diary[folder]?.[ds]?.find(existing=>existing.id===item.id) || target;
+      Object.assign(target, uploaded, {
+        id:item.id,
+        caption,
+        uploading:false,
+        uploadError:false,
+        errorMessage:'',
+        dayKey:ds,
+        rot:item.rot,
+        // Keep the small preview as a backup thumbnail only until the real URL loads.
+        data: target.data
+      });
+
+      if(item.localUrl){
+        URL.revokeObjectURL(item.localUrl);
+        delete target.localUrl;
+        delete item.localUrl;
+      }
+
+      renderDiary(folder);
+      renderCal(folder);
+      await saveNow();
+    }catch(uploadErr){
+      console.error('Diary upload failed:', uploadErr);
+      target=diary[folder]?.[ds]?.find(existing=>existing.id===item.id) || target;
+
+      if(target.data){
+        // Keep the tiny preview synced to the selected day instead of leaving "Uploading..." forever.
+        target.uploading=false;
+        target.uploadError=true;
+        target.errorMessage='Saved preview only — cloud upload failed';
+        if(item.localUrl){
+          URL.revokeObjectURL(item.localUrl);
+          delete target.localUrl;
+          delete item.localUrl;
+        }
+        renderDiary(folder);
+        renderCal(folder);
+        await saveNow();
+      }else{
+        // Documents/images without a preview cannot be saved safely if Storage fails.
+        diary[folder][ds]=diary[folder][ds].filter(existing=>existing.id!==item.id);
+        if(!diary[folder][ds].length) delete diary[folder][ds];
+        renderDiary(folder);
+        renderCal(folder);
+      }
+
+      throw uploadErr;
+    }
   }));
 
   const failed=results.filter(r=>r.status==='rejected').length;
-  if(failed){
-    diary[folder][ds]=diary[folder][ds].filter(item=>!item.uploading);
-    if(!diary[folder][ds].length)delete diary[folder][ds];
-    renderDiary(folder);
-    renderCal(folder);
-  }
+  const succeeded=results.length-failed;
 
-  await saveNow();
-
-  if(failed){
-    setUploadStatus(folder, `${failed} upload${failed>1?'s':''} failed. Saved the rest for ${formatDateLabel(ds)}.`);
+  if(failed && succeeded){
+    setUploadStatus(folder, `${succeeded} synced. ${failed} saved as preview only.`);
+  }else if(failed){
+    setUploadStatus(folder, `Cloud upload failed. Saved image previews for ${formatDateLabel(ds)}.`);
   }else{
     setUploadStatus(folder, `Synced for ${formatDateLabel(ds)} ✦`);
   }
-  setTimeout(()=>setUploadStatus(folder,''),2200);
+  setTimeout(()=>setUploadStatus(folder,''),3500);
 }
 function addDiaryItem(folder,item,doSave=true,targetDay=null){
   const ds=targetDay || ensureSelectedDay(folder);
@@ -1287,6 +1364,7 @@ function renderDiary(folder){
         ? `<img src="${src}" alt="${caption || name}" loading="lazy">`
         : `<a class="doc-thumb" href="${src}" target="_blank" rel="noopener" download="${name}">📄<span>${name}</span></a>`}
       ${it.uploading?`<div class="pcap">Uploading...</div>`:''}
+      ${it.uploadError?`<div class="pcap">Saved preview only</div>`:''}
       ${caption?`<div class="pcap">${caption}</div>`:''}
     </div>`}).join('');
 }
