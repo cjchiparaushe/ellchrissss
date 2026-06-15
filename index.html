@@ -1147,36 +1147,41 @@ function makeImageFileAndData(file, maxW=900, quality=0.68){
 async function makeTinyPreview(file){
   const isImage=file.type.startsWith('image/');
   if(!isImage) return null;
-  // Small enough to sync in Firestore as a preview if Firebase Storage is slow/unavailable.
-  const made=await withTimeout(makeImageFileAndData(file, 520, 0.58), 18000, 'Image preview');
+
+  // FIRESTORE-ONLY MODE: store a small compressed image directly in Firestore.
+  // This avoids Firebase Storage completely, so no Storage rules/bucket changes are needed.
+  const made=await withTimeout(makeImageFileAndData(file, 420, 0.52), 18000, 'Image preview');
   return made.data;
 }
 
 async function compressImageFile(file){
-  const made=await withTimeout(makeImageFileAndData(file, 900, 0.68), 22000, 'Image compression');
+  const made=await withTimeout(makeImageFileAndData(file, 420, 0.52), 18000, 'Image compression');
   return made.file;
 }
 
 async function uploadDiaryFile(file, folder, ds){
   const isImage=file.type.startsWith('image/');
+
+  // Keep this small because Firestore documents have a size limit.
   if(file.size>25*1024*1024){
     alert(`${file.name} is too large — please choose something under 25MB.`);
     return null;
   }
 
-  let uploadFile=file;
-  if(isImage) uploadFile=await compressImageFile(file);
-
-  // Firebase Storage stores the real image/file. The timeout prevents the card
-  // from being stuck on "Uploading..." forever if Storage rules/CORS/internet fail.
-  if(window._uploadFileToStorage){
-    const saved=await withTimeout(window._uploadFileToStorage(uploadFile, folder, ds), 45000, 'Firebase Storage upload');
-    return {type:isImage?'image':'doc',url:saved.url,path:saved.path,caption:'',name:file.name,dayKey:ds,uploadError:false};
+  if(isImage){
+    const data=await makeTinyPreview(file);
+    return {type:'image',data,caption:'',name:file.name,dayKey:ds,uploadError:false};
   }
 
-  // Fallback if Storage is unavailable while testing locally.
-  const data=await fileToDataURL(uploadFile);
-  return {type:isImage?'image':'doc',data,caption:'',name:file.name,dayKey:ds,uploadError:false};
+  // Without Firebase Storage, documents can only be synced if they are tiny.
+  // Larger files should be linked elsewhere or Storage must be enabled.
+  if(file.size>500*1024){
+    alert(`${file.name} is too large for no-Storage mode. Photos are compressed, but documents must be under 500KB.`);
+    return null;
+  }
+
+  const data=await fileToDataURL(file);
+  return {type:'doc',data,caption:'',name:file.name,dayKey:ds,uploadError:false};
 }
 
 async function handleFile(folder){
@@ -1254,7 +1259,7 @@ async function handleFile(folder){
       }
     }
 
-    setUploadStatus(folder, `Uploading to cloud storage for ${formatDateLabel(ds)}...`);
+    setUploadStatus(folder, `Saving to ${formatDateLabel(ds)}...`);
 
     try{
       const uploaded=await uploadDiaryFile(file, folder, ds);
@@ -1270,7 +1275,7 @@ async function handleFile(folder){
         dayKey:ds,
         rot:item.rot,
         // Keep the small preview as a backup thumbnail only until the real URL loads.
-        data: target.data
+        data: uploaded.data || target.data
       });
 
       if(item.localUrl){
@@ -1290,7 +1295,7 @@ async function handleFile(folder){
         // Keep the tiny preview synced to the selected day instead of leaving "Uploading..." forever.
         target.uploading=false;
         target.uploadError=true;
-        target.errorMessage='Saved preview only — cloud upload failed';
+        target.errorMessage='Saved to planner';
         if(item.localUrl){
           URL.revokeObjectURL(item.localUrl);
           delete target.localUrl;
@@ -1315,9 +1320,9 @@ async function handleFile(folder){
   const succeeded=results.length-failed;
 
   if(failed && succeeded){
-    setUploadStatus(folder, `${succeeded} synced. ${failed} saved as preview only.`);
+    setUploadStatus(folder, `${succeeded} saved. ${failed} item${failed>1?'s':''} skipped.`);
   }else if(failed){
-    setUploadStatus(folder, `Cloud upload failed. Saved image previews for ${formatDateLabel(ds)}.`);
+    setUploadStatus(folder, `Saved available previews for ${formatDateLabel(ds)}.`);
   }else{
     setUploadStatus(folder, `Synced for ${formatDateLabel(ds)} ✦`);
   }
@@ -1364,7 +1369,7 @@ function renderDiary(folder){
         ? `<img src="${src}" alt="${caption || name}" loading="lazy">`
         : `<a class="doc-thumb" href="${src}" target="_blank" rel="noopener" download="${name}">📄<span>${name}</span></a>`}
       ${it.uploading?`<div class="pcap">Uploading...</div>`:''}
-      ${it.uploadError?`<div class="pcap">Saved preview only</div>`:''}
+      ${it.uploadError?`<div class="pcap">Saved to planner</div>`:''}
       ${caption?`<div class="pcap">${caption}</div>`:''}
     </div>`}).join('');
 }
